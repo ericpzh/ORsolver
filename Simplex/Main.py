@@ -152,6 +152,7 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
     flag = False
     result = ""
     iteration = 0
+    retls = []
     ##main iteration loop
     while (flag == False):
         ##assemble the new matrix
@@ -203,6 +204,7 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
                         if(tab[j][i] < 1.0011 and tab[j][i] > 0.9989):
                             index = j
                     result += ("x" + str(i + 1) + " = " + str(Fraction(tab[index][len(tab[index])-1]).limit_denominator())+ "\n")
+                    retls.append(Fraction(tab[index][len(tab[index])-1]).limit_denominator())
             break
         ##entering var
         entering = -1
@@ -237,6 +239,7 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
         print("-------------------------------------------")
     ##print result
     print(result)
+    return retls
 
 ##runit
-simplexSolve(CT,A,b,False, customAI = None , customC = None)
+ls = simplexSolve(CT,A,b,False, customAI = None , customC = None)
