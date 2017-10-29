@@ -165,10 +165,10 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
         #y^T
         yT = CBT.dot(Binv)
         '''
-        Matrix concatenate to tabuluer
+        Matrix concatenate to tabuleau
         [ M1 M2 M3 ] = [M7]
         [ M4 M5 M6 ]   [M8]
-        Matrix concatenate to tabuluer
+        Matrix concatenate to tabuleau
         tabZ = [Zcol tab]
        '''
         M1 = yT.dot(A)-CT
