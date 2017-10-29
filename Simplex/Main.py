@@ -6,14 +6,21 @@ np.set_printoptions(formatter={'all':lambda x: str(fractions.Fraction(x).limit_d
 from fractions import Fraction
 
 #Main Input data
-CT = np.array([[3,1,5]])
-
+#Starndard Form
+## coeff of obj function
+## e.g. Max Z = 3x+2y   -> CT = np.array([[3,2]])
+CT = np.array([[6,5]])
+## coeff of constraint
+## e.g   3x + 5y <= 3    -> A = np.array([[3,5],
+##             x <= 2                     [2,0]])
 A = np.array([
-    [7,3,5],
-    [3,4,6]
+    [2,1],
+    [3,1],
 ])
-
-b = np.transpose(np.array([[25,20]]))
+##coeff of RHS
+## e.g   3x + 5y <= 3    -> b = np.array([[3],
+##             x <= 2                     [2]])
+b = np.transpose(np.array([[4,5]]))
 
 ##helper search of entering variable
 ##returns index of X in 1st row of matrix
@@ -59,9 +66,13 @@ def main(CT,A,b,debug):
                 standardForm += (str(A[i][j]) + " " + "x" + str(j + 1))
         standardForm += (" <= " + str(b[i][0]) + "\n")
     print(standardForm)
+    ##If Wrong input:
+    if(len(A[0]) != len(CT[0]) or len(A) != len(b)):
+        print("Error. Dimension mismatches. Aborted")
+        return
     ##If big M or dual Simplex is needed:
     if(min(b) < 0):
-        print("Error, Big M / Dual Simplex method is needed. Aborted")
+        print("Error. Big M / Dual Simplex method is needed. Aborted")
         return
     ##assemble constant matrix elements
     #AI
@@ -76,7 +87,7 @@ def main(CT,A,b,debug):
     col = len(AI[0])
     #rowarr:how many rows in A?
     rowarr = []
-    for i in range(row):
+    for i in range(0,row):
         rowarr.append(i)
     #colarr:how many columns in AI?
     colarr = []
@@ -88,8 +99,13 @@ def main(CT,A,b,debug):
         varlist += ("x" + str(i+1) +"  ")
     varlist += "RHS "
     ##BV/NBV
-    basicVar = [3, 4]
-    nonbasicVar = [0, 1, 2]
+    basicVar = []
+    nonbasicVar = []
+    for i in range(len(AI[0])):
+        if(i < len(A[0])):
+            nonbasicVar.append(i)
+        else:
+            basicVar.append(i)
     ## Z col
     zcol = [[1]]
     for i in range(row):
@@ -102,18 +118,13 @@ def main(CT,A,b,debug):
     while (flag == False):
         ##assemble the new matrix
         # B
-        tempB = np.ix_(rowarr, basicVar)
-        for i in rowarr:
-            tempB[i].shape
-        B = AI[tempB]
+        B = np.array(AI[rowarr][:,basicVar])
         # C_B^T
-        tempC = np.ix_([0], basicVar)
-        tempC[0].shape
-        CBT = C[tempC]
-        #y^T
-        yT = CBT.dot(inv(B))
+        CBT = np.array([C[0][basicVar]])
         #B^-1
         Binv = inv(B)
+        #y^T
+        yT = CBT.dot(Binv)
         '''
         Matrix concatenate to tabuluer
         [ M1 M2 M3 ] = [M7]
