@@ -1,9 +1,12 @@
 import numpy as np
 from Main import simplexSolve
-from BreakThru import payoffMatrix
 '''
 Given a Payoff Matrix, solve it with Simplex method 
 '''
+payoffMatrix = np.array([
+    [2,3],
+    [1,1]
+])
 def PayoffMatrixSolve(payoffMatrix):
     ##build CT,A,b from payoff matrix
     CTarr = [[]]
@@ -29,3 +32,4 @@ def PayoffMatrixSolve(payoffMatrix):
 
 ##runit
 PayoffMatrixSolve(payoffMatrix)
+print("Z = Expectation of the game \n" + "x1 = (u/v) \n" + "rest of Xs sum up to 1 = probabilities of certain strategies")
