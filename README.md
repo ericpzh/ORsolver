@@ -1,10 +1,10 @@
 # Simplex
-LP Simplex method solver
+Linear Program Simplex method solver
 
 Input of standard Form
 
 Output of Fraction(supported)
 
-HW helper
+UIUC IE310HW helper (kind of)
 
 No Big M yet
