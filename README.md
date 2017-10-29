@@ -1,6 +1,10 @@
 # Simplex
 LP Simplex method solver
 
-Output of !Fraction! supported
+Input of standard Form
+
+Output of Fraction(supported)
 
 HW helper
+
+No Big M yet
