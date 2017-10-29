@@ -79,7 +79,7 @@ def leavingVar(matrix,entering):
                bool   debug:(true -> print slack var);
             OPTIONAL : nparray customAI,customC;
 '''
-def main(CT,A,b,debug,customAI = None,customC = None):
+def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
     ##If Wrong input:
     if(len(A[0]) != len(CT[0]) or len(A) != len(b)):
         print("Error. Dimension mismatches. Aborted")
@@ -236,4 +236,4 @@ def main(CT,A,b,debug,customAI = None,customC = None):
     print(result)
 
 ##runit
-main(CT,A,b,True, customAI = None , customC = None)
+simplexSolve(CT,A,b,False, customAI = None , customC = None)
