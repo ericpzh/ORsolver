@@ -10,17 +10,17 @@ from fractions import Fraction
 ## coeff of obj function
 ## e.g. Max Z = 3x+2y   -> CT = np.array([[3,2]])
 '''
-CT = np.array([[1,0,0,0]])
+CT = np.array([[1,0,0]])
 '''
 ## coeff of constraint
 ## e.g   3x + 5y <= 3    -> A = np.array([[3,5],
 ##             x <= 2                     [2,0]])
 '''
 A = np.array([
-    [1,0,-1,1],
-    [1,1,0,-1],
-    [1,-1,1,0],
-    [0,1,1,1]
+    [1,0,-1],
+    [1,2,-4],
+    [1,-2,3],
+    [0,1,1],
 ])
 '''
 ##coeff of RHS
@@ -29,19 +29,21 @@ A = np.array([
 '''
 b = np.transpose(np.array([[0,0,0,1]]))
 '''(<-'#" this (if needed))
-##INDEV
+##INDEV 
+##(for the x + y = 1 case : x + y <= 1 still works)
+##
 ##comment out if you need to overwrite of AI and C
 ##e.g. if you need  Max x + y = 1 ->  C = np.array([[1,1,1]])
 ##                      x + y = 1 -> AI = np.array([[1,1,0],
 ##                    2x + 3y <= 1                 [2,3,1]])
                                      
 AI = np.array([
-    [1,0,-1,1,1,0,0],
-    [1,1,0,-1,0,1,0],
-    [1,-1,1,0,0,0,1],
-    [0,1,1,1,0,0,0]
+     [1,0,-1,1,0,0],
+     [1,2,-4,0,1,0],
+     [1,-2,3,0,0,1],
+     [0,1,1,0,0,0],
 ])
-C = np.array([[1,0,0,0,0,0,0]])
+C = np.array([[1,0,0,0,0,0]])
 
 ##and run with main(CT,A,b,True,customAI = AI, customC = C)
 ##'''
@@ -110,6 +112,11 @@ def main(CT,A,b,debug,customAI = None,customC = None):
     for i in range(len(A)):
         temp.append(0)
     C = np.concatenate((CT, [temp]), axis=1)
+    ##check if custom input:
+    if(np.all(customAI != None)):
+        AI = customAI
+    if(np.all(customC != None)):
+        C = customC
     #row/col
     row = len(A)
     col = len(AI[0])
@@ -142,11 +149,6 @@ def main(CT,A,b,debug,customAI = None,customC = None):
     flag = False
     result = ""
     iteration = 0
-    ##check if custom input:
-    if(customAI != None):
-        AI = customAI
-    if(customC != None):
-        C = customC
     ##main iteration loop
     while (flag == False):
         ##assemble the new matrix
@@ -155,6 +157,7 @@ def main(CT,A,b,debug,customAI = None,customC = None):
         # C_B^T
         CBT = np.array([C[0][basicVar]])
         #B^-1
+        print(B)
         Binv = inv(B)
         #y^T
         yT = CBT.dot(Binv)
