@@ -5,6 +5,9 @@ import fractions
 np.set_printoptions(formatter={'all':lambda x: str(fractions.Fraction(x).limit_denominator())})
 from fractions import Fraction
 '''
+#This is Simplex solver main program uses matrix/tabular form to solve Linear programs
+'''
+'''
 #Main Input data
 #Starndard Form
 ## coeff of obj function
