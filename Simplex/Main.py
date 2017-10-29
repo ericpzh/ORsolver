@@ -4,23 +4,47 @@ from decimal import Decimal
 import fractions
 np.set_printoptions(formatter={'all':lambda x: str(fractions.Fraction(x).limit_denominator())})
 from fractions import Fraction
-
+'''
 #Main Input data
 #Starndard Form
 ## coeff of obj function
 ## e.g. Max Z = 3x+2y   -> CT = np.array([[3,2]])
-CT = np.array([[6,5]])
+'''
+CT = np.array([[1,0,0,0]])
+'''
 ## coeff of constraint
 ## e.g   3x + 5y <= 3    -> A = np.array([[3,5],
 ##             x <= 2                     [2,0]])
+'''
 A = np.array([
-    [2,1],
-    [3,1],
+    [1,0,-1,1],
+    [1,1,0,-1],
+    [1,-1,1,0],
+    [0,1,1,1]
 ])
+'''
 ##coeff of RHS
 ## e.g   3x + 5y <= 3    -> b = np.array([[3],
 ##             x <= 2                     [2]])
-b = np.transpose(np.array([[4,5]]))
+'''
+b = np.transpose(np.array([[0,0,0,1]]))
+'''(<-'#" this (if needed))
+##INDEV
+##comment out if you need to overwrite of AI and C
+##e.g. if you need  Max x + y = 1 ->  C = np.array([[1,1,1]])
+##                      x + y = 1 -> AI = np.array([[1,1,0],
+##                    2x + 3y <= 1                 [2,3,1]])
+                                     
+AI = np.array([
+    [1,0,-1,1,1,0,0],
+    [1,1,0,-1,0,1,0],
+    [1,-1,1,0,0,0,1],
+    [0,1,1,1,0,0,0]
+])
+C = np.array([[1,0,0,0,0,0,0]])
+
+##and run with main(CT,A,b,True,customAI = AI, customC = C)
+##'''
 
 ##helper search of entering variable
 ##returns index of X in 1st row of matrix
@@ -46,10 +70,22 @@ def leavingVar(matrix,entering):
             ret = i
     return ret
 
+'''
 ##Main function
 ##No big M yet
-##Takes in: nparray C^T,A,b; bool debug:(true -> print slack var)
-def main(CT,A,b,debug):
+##Takes in: nparray C^T,A,b;
+               bool   debug:(true -> print slack var);
+            OPTIONAL : nparray customAI,customC;
+'''
+def main(CT,A,b,debug,customAI = None,customC = None):
+    ##If Wrong input:
+    if(len(A[0]) != len(CT[0]) or len(A) != len(b)):
+        print("Error. Dimension mismatches. Aborted")
+        return
+    ##If big M or dual Simplex is needed:
+    if(min(b) < 0):
+        print("Error. Big M / Dual Simplex method is needed. Aborted")
+        return
     ##print objective
     standardForm = ("Maximize Z = ")
     for i in range(len(CT[0])):
@@ -66,14 +102,6 @@ def main(CT,A,b,debug):
                 standardForm += (str(A[i][j]) + " " + "x" + str(j + 1))
         standardForm += (" <= " + str(b[i][0]) + "\n")
     print(standardForm)
-    ##If Wrong input:
-    if(len(A[0]) != len(CT[0]) or len(A) != len(b)):
-        print("Error. Dimension mismatches. Aborted")
-        return
-    ##If big M or dual Simplex is needed:
-    if(min(b) < 0):
-        print("Error. Big M / Dual Simplex method is needed. Aborted")
-        return
     ##assemble constant matrix elements
     #AI
     AI = np.concatenate((A, np.identity(len(A))), axis=1)
@@ -114,6 +142,11 @@ def main(CT,A,b,debug):
     flag = False
     result = ""
     iteration = 0
+    ##check if custom input:
+    if(customAI != None):
+        AI = customAI
+    if(customC != None):
+        C = customC
     ##main iteration loop
     while (flag == False):
         ##assemble the new matrix
@@ -148,8 +181,8 @@ def main(CT,A,b,debug):
         print(tabZ)
         print("Basic Var(index): " + str(basicVar))
         print("Nonbasic Var(index): " + str(nonbasicVar))
-        ##if optimal
-        if (min(tab[0]) >= 0):
+        ##if optimal ( > -1e-10 to aviod computing error on floats)
+        if (min(tab[0]) >= 0 or min(tab[0]) > -1e-10):
             flag = True
             result = ( "------------------------------------------- \n" + "Optimal Solution Found \n" + "Z = " + str(Fraction(tab[0][len(tab[0])-1]).limit_denominator()) + "\n")
             length = len(A[0])
@@ -170,7 +203,7 @@ def main(CT,A,b,debug):
         tempEnter = enteringVar(tab[0])
         if(tempEnter != -1):
             entering = tempEnter
-        print("Entering var : x" + str(entering+1) + " val: "+str(tab[0][entering]) + " .")
+        print("Entering var : x" + str(entering+1) + " coeff val: "+str(tab[0][entering]) + " .")
         ##leaving var
         leaving = -1
         templeaving = leavingVar(tab,entering)
@@ -180,7 +213,7 @@ def main(CT,A,b,debug):
             for i in range(len(basicVar)):
                 if(leaving == basicVar[i]):
                     leavingindex = i
-            print("Leaving var : x" + str(leaving+1) + " val : "+str(tab[leavingindex+1][entering]) + ".")
+            print("Leaving var  : x" + str(leaving+1) + " coeff val: "+str(tab[leavingindex+1][entering]) + ".")
         else:
             print("Leaving var : Does not Exist")
         ##if unbounded
@@ -200,4 +233,4 @@ def main(CT,A,b,debug):
     print(result)
 
 ##runit
-main(CT,A,b,True)
+main(CT,A,b,True, customAI = None , customC = None)
