@@ -4,6 +4,17 @@ from decimal import Decimal
 import fractions
 np.set_printoptions(formatter={'all':lambda x: str(fractions.Fraction(x).limit_denominator())})
 from fractions import Fraction
+
+#Main Input data
+CT = np.array([[3,1,5]])
+
+A = np.array([
+    [7,3,5],
+    [3,4,6]
+])
+
+b = np.transpose(np.array([[25,20]]))
+
 ##helper search of entering variable
 ##returns index of X in 1st row of matrix
 def enteringVar(list):
@@ -48,6 +59,10 @@ def main(CT,A,b,debug):
                 standardForm += (str(A[i][j]) + " " + "x" + str(j + 1))
         standardForm += (" <= " + str(b[i][0]) + "\n")
     print(standardForm)
+    ##If big M or dual Simplex is needed:
+    if(min(b) < 0):
+        print("Error, Big M / Dual Simplex method is needed. Aborted")
+        return
     ##assemble constant matrix elements
     #AI
     AI = np.concatenate((A, np.identity(len(A))), axis=1)
@@ -63,8 +78,22 @@ def main(CT,A,b,debug):
     rowarr = []
     for i in range(row):
         rowarr.append(i)
+    #colarr:how many columns in AI?
+    colarr = []
+    for i in range(col):
+        colarr.append(i)
+    #variable list for print
+    varlist = "  Z  "
+    for i in colarr:
+        varlist += ("x" + str(i+1) +"  ")
+    varlist += "RHS "
+    ##BV/NBV
     basicVar = [3, 4]
     nonbasicVar = [0, 1, 2]
+    ## Z col
+    zcol = [[1]]
+    for i in range(row):
+        zcol.append([0])
     ##initialize constant value
     flag = False
     result = ""
@@ -89,6 +118,8 @@ def main(CT,A,b,debug):
         Matrix concatenate to tabuluer
         [ M1 M2 M3 ] = [M7]
         [ M4 M5 M6 ]   [M8]
+        Matrix concatenate to tabuluer
+        tabZ = [Zcol tab]
        '''
         M1 = yT.dot(A)-CT
         M2 = yT
@@ -96,12 +127,14 @@ def main(CT,A,b,debug):
         M4 = Binv.dot(A)
         M5 = Binv
         M6 = Binv.dot(b)
-        M7 = np.concatenate((M1,M2,M3),axis=1)
-        M8 = np.concatenate((M4,M5,M6),axis=1)
+        M7 = np.concatenate((M1,M2,M3),axis = 1)
+        M8 = np.concatenate((M4,M5,M6),axis = 1)
         tab = np.concatenate((M7,M8),axis= 0 )
+        tabZ = np.concatenate((zcol,tab),axis = 1)
         ##print
         print("Iteration #:" + str(iteration) + ".")
-        print(tab)
+        print(varlist)
+        print(tabZ)
         print("Basic Var(index): " + str(basicVar))
         print("Nonbasic Var(index): " + str(nonbasicVar))
         ##if optimal
@@ -155,14 +188,5 @@ def main(CT,A,b,debug):
     ##print result
     print(result)
 
-#Main data
-ct = np.array([[3,1,5]])
-
-a = np.array([
-    [7,3,5],
-    [3,4,6]
-])
-
-B = np.transpose(np.array([[25,20]]))
-
-main(ct,a,B,True)
+##runit
+main(CT,A,b,True)
