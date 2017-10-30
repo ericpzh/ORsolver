@@ -6,6 +6,8 @@ import sys
 Experimenting Navie AI for game BreakThru using payoff Matrix and Simplex
 '''
 ##helper of getting two row of payoff matrix from the broad
+##takes in the broad and a piece to evaluate
+##return two row of payoff matrix
 def value(broad,piece):
     uppercase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
                  "U", "V", "W", "X", "Y", "Z"]
@@ -235,7 +237,9 @@ def value(broad,piece):
     ret[1] = right
     return ret
 
-##generate matrix
+##generate payoffmatrix from broad
+##takes in broad in A,a notation
+##return payoffMatrix of later use
 def GenerateMatrix(broad):
     payoffMatrix = []
     uppercase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
@@ -247,7 +251,9 @@ def GenerateMatrix(broad):
     payoffMatrix = np.array(payoffMatrix)
     return payoffMatrix
 
-#translate 0,8 matrix into A,a matrix
+##helper translate the broad
+##takes in broad in 0,8 notation
+##return broad in A,a notation
 def translate(broad):
     uppercase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T","U", "V", "W", "X", "Y", "Z"]
     char1 = 0
@@ -267,6 +273,9 @@ def translate(broad):
                 copy[i][j] = "-"
     return copy
 
+##helper translate between 2 notations
+##takes in broad in a,A notation
+##return borad in 0,8 notation
 def translateBack(broad):
     uppercase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
                  "U", "V", "W", "X", "Y", "Z"]
@@ -282,7 +291,29 @@ def translateBack(broad):
             else:
                 copy[i][j] = "0"
     return copy
+##rotate broad 180deg for AI use
+##takes in a broad in 0/8 notation
+def rotateBroad(broad):
+    copy = []
+    for i in broad:
+        copy.append(i)
+    for i in range(len(broad)):
+        for j in range(len(broad[i])):
+            copy[i][j] = broad[len(broad)-i-1][len(broad[0])-j-1]
+            if(copy[i][j] == "0"):
+                copy[i][j] = "8"
+            elif(copy[i][j] == "8"):
+                copy[i][j] = "0"
+            else:
+                copy[i][j] = "-"
+    print(copy)
+    return copy
+
+##Human Input
+##Takes in broad in 0,8 notation
+##return modified broad in 0,8 notation
 def humanInput(broad):
+    broad = translate(broad)
     uppercase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
                  "U", "V", "W", "X", "Y", "Z"]
     for i in broad:
@@ -318,9 +349,67 @@ def humanInput(broad):
             print("Invalid try again")
     broad[newrow][newcol] = broad[row][col]
     broad[row][col] = "-"
-    return broad
-               
-##Main program
+    return translateBack(broad)
+
+##AI input
+##takes in a broad in 0/8 notation
+##return modified broad in 0/8 notation
+def AIInput(broad):
+    broad = translate(broad)
+    # X2 = AL, X3 = AR, X4 = BL, X5 = BR, X6 = CL, X7 = CR, X8 = DL, X9 = DR, X10 = EL, X11 = ER, X12 = FL, X13 = FR, X14 = GL, X15 = GR, X16 = HL, X17 = HR, X18 = IL, X19 = IR, X20 = JL, X21 = JR ...
+    Dict = {2: "AL", 3: "AR", 4: "BL", 5: "BR", 6: "CL", 7: "CR", 8: "DL", 9: "DR", 10: "EL", 11: "ER", 12: "FL",
+            13: "FR", 14: "GL", 15: "GR", 16: "HL", 17: "HR", 18: "IL", 19: "IR", 20: "JL", 21: "JR", 22: "KL",
+            23: "KR", 24: "LL", 25: "LR",
+            26: "ML", 27: "MR", 28: "NL", 29: "NR", 30: "OL", 31: "OR", 32: "PL", 33: "PR", 34: "QL", 35: "QR",
+            36: "RL", 37: "RR", 38: "SL", 39: "SR", 40: "TL", 41: "TR", 42: "UL", 43: "UR", 44: "VL", 45: "VR",
+            46: "WL", 47: "WR", 48: "XL", 49: "XR",
+            50: "YL", 51: "YR", 52: "ZL", 53: "ZR"}
+    ls = PayoffMatrixSolve(GenerateMatrix(broad), False)
+    if (max(ls) == 0):
+        print("I lost")
+        flag = True
+    else:
+        index = ls.index(max(ls)) + 2
+        print("I will move " + Dict[index])
+        ##modify
+        ##search of piece
+        col = -1
+        row = -1
+        piece = Dict[index][0:1]
+        direction = Dict[index][1:2]
+        for r in range(len(broad)):
+            for c in range(len(broad[r])):
+                if (broad[r][c] == piece):
+                    row = r
+                    col = c
+        if (direction == "L"):
+            broad[row - 1][col - 1] = broad[row][col]
+        else:
+            broad[row - 1][col + 1] = broad[row][col]
+        broad[row][col] = "-"
+    return translateBack(broad)
+
+##Main helper
+##Takes in broad in 0,8 notation
+##return bool(true if game over)
+def over(broad):
+    count0 = 0
+    count8 = 0
+    for i in broad:
+        for j in range(len(broad[0])):
+            if (i[j] == "0"):
+                count0 += 1
+            elif (i[j] == "8"):
+                count8 += 1
+            else:
+                count0 += 0
+    if ("0" in broad[len(broad) - 1] or "8" in broad[0] or count0 == 0 or count8 == 0):
+        return True
+    else:
+        return False
+
+##Main game program
+##run the game
 def BreakThru():
     ##within 13 col is OK
     mainBroad = [
@@ -333,48 +422,44 @@ def BreakThru():
         ["-", "-", "-", "-", "-","-","-","-"],
         ["-", "-", "-", "-", "-","-","-","-"],
         ["8", "8", "8", "8", "8","8","8","8"],
-        ["8", "8", "8", "8", "8","8","8","8"],
+        ["8", "8", "8", "8", "8","8","8","8"]
     ]
     flag = False
     count = 0
+    broad = mainBroad
     while(flag == False):
-        broad = translate(mainBroad)
-        # X2 = AL, X3 = AR, X4 = BL, X5 = BR, X6 = CL, X7 = CR, X8 = DL, X9 = DR, X10 = EL, X11 = ER, X12 = FL, X13 = FR, X14 = GL, X15 = GR, X16 = HL, X17 = HR, X18 = IL, X19 = IR, X20 = JL, X21 = JR ...
-        Dict = {2:"AL", 3:"AR", 4: "BL", 5 : "BR", 6 : "CL", 7 : "CR", 8 : "DL", 9 : "DR", 10 : "EL", 11 : "ER", 12 : "FL", 13 : "FR", 14 : "GL", 15:"GR", 16 : "HL", 17 : "HR", 18 : "IL", 19 : "IR", 20 : "JL",21 : "JR",22:"KL",23:"KR",24:"LL",25:"LR",
-                26: "ML", 27: "MR", 28: "NL", 29: "NR", 30: "OL", 31: "OR", 32: "PL", 33: "PR", 34: "QL", 35: "QR", 36: "RL", 37: "RR", 38: "SL", 39: "SR", 40: "TL", 41: "TR", 42: "UL", 43: "UR", 44: "VL", 45: "VR", 46: "WL", 47: "WR", 48: "XL", 49: "XR",
-                50:"YL",51:"YR",52:"ZL",53:"ZR"}
-        ls = PayoffMatrixSolve(GenerateMatrix(broad),False)
-        if(max(ls) == 0):
-            print("I lost")
-            flag = True
-        else:
-            index = ls.index(max(ls))+2
-            print("I will move " + Dict[index])
-            ##modify
-            ##search of piece
-            col = -1
-            row = -1
-            piece = Dict[index][0:1]
-            direction = Dict[index][1:2]
-            for r in range(len(broad)):
-                for c in range(len(broad[r])):
-                    if (broad[r][c] == piece):
-                        row = r
-                        col = c
-            if(direction == "L"):
-                broad[row-1][col-1] = broad[row][col]
-            else:
-                broad[row-1][col+1] = broad[row][col]
-            broad[row][col] = "-"
+        ##broad should all be in 0,8 notation
+        broad = AIInput(broad)
+        for i in broad:
+            print(*i)
+        if(over(broad) == True):
+            break
         ##human PlayerB
         #broad = humanInput(broad)
-        broad = translateBack(broad)
+        ##AI PlayerB
+        broad = rotateBroad(broad)
+        broad = AIInput(broad)
+        broad = rotateBroad(broad)
         for i in broad:
             print(*i)
         count += 1
-        print("count :" + str(count))
-        if("0" in broad[len(broad)-1] or "8" in broad[0]):
+        print("rounds :" + str(count))
+        if(over(broad) == True):
             break
     print("Game over")
 ##runit
-BreakThru()
+#BreakThru()
+mainBroad = [
+        ["0", "0", "0", "0", "0","0","0","0"],
+        ["0", "0", "0", "0", "0","0","0","0"],
+        ["-", "0", "-", "-", "-","-","-","-"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["8", "8", "8", "8", "8","8","8","8"],
+        ["8", "8", "8", "8", "8","8","8","8"]]
+mainBroad = rotateBroad(mainBroad)
+for i in mainBroad:
+    print(*i)
