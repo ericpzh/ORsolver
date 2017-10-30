@@ -7,12 +7,33 @@ Experimenting Navie AI for game BreakThru using payoff Matrix and Simplex
 '''
 ##helper of getting two row of payoff matrix from the broad
 def value(broad,piece):
+    uppercase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+                 "U", "V", "W", "X", "Y", "Z"]
+    lowercase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                 "u", "v", "w", "x", "y", "z"]
+    countself = 0
+    countoppo = 0
+    for i in range(len(broad)):
+        for j in range(len(broad[i])):
+            if(broad[i][j] in uppercase):
+                countself += 1
+            elif(broad[i][j] in lowercase):
+                countoppo += 1
+            else:
+                countself += 0
+    if(countself - countoppo > -2):
+        F = 2  ##move forward
+        N = 1  ##Being taken out for no reason
+        E = 5  # Take out opponant piece for no consequence
+        T = 4  # trade
+        S = 2  # protected by own piece
+    else:
+        F = 3  ##move forward
+        N = 1  ##Being taken out for no reason
+        E = 5  # Take out opponant piece for no consequence
+        T = 2  # trade
+        S = 3  # protected by own piece
     M = -50000  ##impossible move
-    F = 2  ##move forward
-    N = 1  ##Being taken out for no reason
-    E = 5  # Take out opponant piece for no consequence
-    T = 4  # trade
-    S = 3 # protected by own piece
     W = 50000 #Have to go for that move
     L = 0#Avoid this lossing move
     Ml = []
@@ -32,8 +53,6 @@ def value(broad,piece):
         Wl.append(W)
         Ll.append(L)
         Sl.append(S)
-    uppercase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-    lowercase = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
     upperlower = ["a","A", "b","B", "c","C", "d","D","e", "E","f", "F","g", "G","h", "H", "i","I","j", "J","k","K","l","L","m","M","n","N","o","O","p","P","q","Q","r","R","s","S","t","T","u","U","v","V","w","W","x","X","y","Y","z","Z"]
     upper = uppercase[:2*len(broad[0])]
     oppo = lowercase[:2*len(broad[0])]
@@ -347,7 +366,8 @@ def BreakThru():
             else:
                 broad[row-1][col+1] = broad[row][col]
             broad[row][col] = "-"
-        #broad = humanInput(broad)##human PlayerB
+        ##human PlayerB
+        #broad = humanInput(broad)
         broad = translateBack(broad)
         for i in broad:
             print(*i)
