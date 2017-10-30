@@ -1,9 +1,9 @@
 import numpy as np
 import string
 from PayoffMatrix import PayoffMatrixSolve
-
+import sys
 '''
-Experimenting AI for game BreakThru using payoff Matrix and Simplex
+Experimenting Navie AI for game BreakThru using payoff Matrix and Simplex
 '''
 ##helper of getting two row of payoff matrix from the broad
 def value(broad,piece):
@@ -13,7 +13,7 @@ def value(broad,piece):
     E = 5  # Take out opponant piece for no consequence
     T = 4  # trade
     S = 3 # protected by own piece
-    W = 500000 #Have to go for that move
+    W = 50000 #Have to go for that move
     L = 0#Avoid this lossing move
     Ml = []
     Fl = []
@@ -134,7 +134,12 @@ def value(broad,piece):
                 else:
                     ##Opponant no interference no change to list
                     left = left
-
+            ##lock constant encourage link in a line
+            lock = len(set(broad[row - 1]).intersection(set(upper)))+1
+            back = len(set(broad[row]).intersection(set(upper)))
+            for i in left:
+                i*=lock
+                i*=(back*0.5)
         # right col
         if (col == len(broad[0])-1):
             right = Ml
@@ -201,7 +206,12 @@ def value(broad,piece):
                 else:
                     ##Opponant no interference no change to list
                     right = right
-
+            ##lock constant encourage link in a line
+            lock = len(set(broad[row - 1]).intersection(set(upper))) + 1
+            back = len(set(broad[row]).intersection(set(upper)))
+            for i in right:
+                i *= lock
+                i *= (back * 0.5)
     ret[0] = left
     ret[1] = right
     return ret
@@ -254,6 +264,8 @@ def translateBack(broad):
                 copy[i][j] = "0"
     return copy
 def humanInput(broad):
+    uppercase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+                 "U", "V", "W", "X", "Y", "Z"]
     for i in broad:
         print(*i)
     flag = False
@@ -262,19 +274,26 @@ def humanInput(broad):
     row = -1
     col = -1
     while(flag == False):
-        piece = raw_input("Please enter the piece you want to move (lower case): ")
-        direction = raw_input("Please enter the direction you want " + str(piece) +" to move (-1 for broadleft, 1 for broadright): ")
+        piece = input("Please enter the piece you want to move (lower case): ")
+        direction = input("Please enter the direction you want " + str(piece) +" to move (l for broadleft, r for broadright): ")
         ##search of piece
+        if(direction == "l"):
+            direction = -1;
+        elif(direction == "r"):
+            direction = 1;
+        else:
+            direction = len(broad[0])
         for r in range(len(broad)):
             for c in range(len(broad[r])):
                 if(broad[r][c] == piece):
                     row = r
                     col = c
         newrow = row+1
-        newcol = col+int(direction)            
-        if(newrow > 0 and newrow < len(broad) and newcol >= 0 and newcol<len(broad[0])):
+        newcol = col+direction
+        print(row,col)
+        if(newrow < 0 or newrow >= len(broad) or newcol < 0 or newcol>=len(broad[0]) or row == -1 or col == -1):
             print("Invalid try again")
-        elif(broad[newrow][newcol] == "-"):
+        elif(broad[newrow][newcol] == "-" or broad[newrow][newcol] in uppercase):
             flag = True
         else:
             print("Invalid try again")
@@ -286,16 +305,16 @@ def humanInput(broad):
 def BreakThru():
     ##within 13 col is OK
     mainBroad = [
-        ["0", "0", "0", "0", "0"],
-        ["0", "0", "0", "0", "0"],
-        ["-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-"],
-        ["8", "8", "8", "8", "8"],
-        ["8", "8", "8", "8", "8"],
+        ["0", "0", "0", "0", "0","0","0","0"],
+        ["0", "0", "0", "0", "0","0","0","0"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["-", "-", "-", "-", "-","-","-","-"],
+        ["8", "8", "8", "8", "8","8","8","8"],
+        ["8", "8", "8", "8", "8","8","8","8"],
     ]
     flag = False
     count = 0
@@ -328,7 +347,7 @@ def BreakThru():
             else:
                 broad[row-1][col+1] = broad[row][col]
             broad[row][col] = "-"
-        broad = humanInput(broad)##human PlayerB
+        #broad = humanInput(broad)##human PlayerB
         broad = translateBack(broad)
         for i in broad:
             print(*i)
