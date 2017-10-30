@@ -253,7 +253,7 @@ def translateBack(broad):
             else:
                 copy[i][j] = "0"
     return copy
-def human(broad):
+def humanInput(broad):
     flag = False
     newcol = -1
     newrow = -1
