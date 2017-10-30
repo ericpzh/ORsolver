@@ -254,6 +254,8 @@ def translateBack(broad):
                 copy[i][j] = "0"
     return copy
 def humanInput(broad):
+    for i in broad:
+        print(*i)
     flag = False
     newcol = -1
     newrow = -1
@@ -326,6 +328,7 @@ def BreakThru():
             else:
                 broad[row-1][col+1] = broad[row][col]
             broad[row][col] = "-"
+        broad = humanInput(broad)##human PlayerB
         broad = translateBack(broad)
         for i in broad:
             print(*i)
