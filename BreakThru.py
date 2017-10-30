@@ -253,6 +253,26 @@ def translateBack(broad):
             else:
                 copy[i][j] = "0"
     return copy
+def human(broad):
+    flag = False
+    while(flag == False):
+        piece = raw_input("Please enter the piece you want to move (lower case): ")
+        direction = raw_input("Please enter the direction you want " + str(piece) +" to move (-1 for broadleft, 1 for broadright): ")
+        ##search of piece
+        col = -1
+        row = -1
+        for r in range(len(broad)):
+            for c in range(len(broad[r])):
+                if(broad[r][c] == piece):
+                    row = r
+                    col = c
+        if(row+1 > 0 and row+1 < len(broad) and col+int(direction) >= 0 and col+int(direction)<len(broad[0])):
+            print("Invalid try again")
+        elif(broad[row+1][col+int(direction)] == "-"):
+            flag = True
+        else:
+            print("Invalid try again")
+               
 ##Main program
 def BreakThru():
     ##within 13 col is OK
