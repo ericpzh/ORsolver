@@ -198,6 +198,7 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
             for i in range(length):
                 if(i in nonbasicVar):
                     result += ("x"+str(i+1) +" = 0" + "\n")
+                    retls.append(0)
                 else:
                     index = -1
                     for j in range(1,len(tab)):

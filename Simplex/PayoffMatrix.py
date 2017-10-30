@@ -33,7 +33,7 @@ def PayoffMatrixSolve(payoffMatrix):
     ls = simplexSolve(CT,A,b,False)
     del ls[0]
     print("Z = Expectation of the game \n" + "x1 = u \n" + "rest of Xs sum up to 1 = probabilities of certain strategies")
-    print(ls)
+    return ls
 
 ##runit
 PayoffMatrixSolve(Matrix)
