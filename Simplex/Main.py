@@ -79,7 +79,7 @@ def leavingVar(matrix,entering):
 ##Main function
 ##No big M yet
 ##Takes in: nparray C^T,A,b;
-               bool   debug:(true -> print slack var);
+               bool   debug:(true -> print slack var and itermidate steps, and results);
             OPTIONAL : nparray customAI,customC;
 '''
 def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
@@ -106,7 +106,8 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
             else:
                 standardForm += (str(A[i][j]) + " " + "x" + str(j + 1))
         standardForm += (" <= " + str(b[i][0]) + "\n")
-    print(standardForm)
+    if(debug == True):
+        print(standardForm)
     ##assemble constant matrix elements
     #AI
     AI = np.concatenate((A, np.identity(len(A))), axis=1)
@@ -161,7 +162,6 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
         # C_B^T
         CBT = np.array([C[0][basicVar]])
         #B^-1
-        print(B)
         Binv = inv(B)
         #y^T
         yT = CBT.dot(Binv)
@@ -183,11 +183,12 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
         tab = np.concatenate((M7,M8),axis= 0 )
         tabZ = np.concatenate((zcol,tab),axis = 1)
         ##print
-        print("Iteration #:" + str(iteration) + ".")
-        print(varlist)
-        print(tabZ)
-        print("Basic Var(index): " + str(basicVar))
-        print("Nonbasic Var(index): " + str(nonbasicVar))
+        if(debug == True):
+            print("Iteration #:" + str(iteration) + ".")
+            print(varlist)
+            print(tabZ)
+            print("Basic Var(index): " + str(basicVar))
+            print("Nonbasic Var(index): " + str(nonbasicVar))
         ##if optimal ( > -1e-10 to aviod computing error on floats)
         if (min(tab[0]) >= 0 or min(tab[0]) > -1e-10):
             flag = True
@@ -212,7 +213,8 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
         tempEnter = enteringVar(tab[0])
         if(tempEnter != -1):
             entering = tempEnter
-        print("Entering var : x" + str(entering+1) + " coeff val: "+str(tab[0][entering]) + " .")
+        if(debug == True):
+            print("Entering var : x" + str(entering+1) + " coeff val: "+str(tab[0][entering]) + " .")
         ##leaving var
         leaving = -1
         templeaving = leavingVar(tab,entering)
@@ -222,9 +224,11 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
             for i in range(len(basicVar)):
                 if(leaving == basicVar[i]):
                     leavingindex = i
-            print("Leaving var  : x" + str(leaving+1) + " coeff val: "+str(tab[leavingindex+1][entering]) + ".")
+            if(debug == True):
+                print("Leaving var  : x" + str(leaving+1) + " coeff val: "+str(tab[leavingindex+1][entering]) + ".")
         else:
-            print("Leaving var : Does not Exist")
+            if (debug == True):
+                print("Leaving var : Does not Exist")
         ##if unbounded
         if (leaving == -1):
             flag = True
@@ -237,9 +241,11 @@ def simplexSolve(CT,A,b,debug,customAI = None,customC = None):
         nonbasicVar[nonbasicVar.index(entering)] = leaving
         ##one more iteration
         iteration += 1
-        print("-------------------------------------------")
+        if (debug == True):
+            print("-------------------------------------------")
     ##print result
-    print(result)
+    if (debug == True):
+        print(result)
     return retls
 
 ##runit

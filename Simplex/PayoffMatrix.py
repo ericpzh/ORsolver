@@ -7,9 +7,11 @@ Matrix = np.array([
     [2,3],
     [1,1]
 ])
-def PayoffMatrixSolve(payoffMatrix):
-    print("Payoff Matrix entered: ")
-    print(payoffMatrix)
+##takes in a payoffMatrix and bool debug(print intermidates step if true)
+def PayoffMatrixSolve(payoffMatrix,debug):
+    if(debug == True):
+        print("Payoff Matrix entered: ")
+        print(payoffMatrix)
     ##build CT,A,b from payoff matrix
     CTarr = [[]]
     tempA = [[]]
@@ -32,7 +34,8 @@ def PayoffMatrixSolve(payoffMatrix):
     ##solve
     ls = simplexSolve(CT,A,b,False)
     del ls[0]
-    print("Z = Expectation of the game \n" + "x1 = u \n" + "rest of Xs sum up to 1 = probabilities of certain strategies")
+    if(debug == True):
+        print("Z = Expectation of the game \n" + "x1 = u \n" + "rest of Xs sum up to 1 = probabilities of certain strategies")
     return ls
 
 ##runit
