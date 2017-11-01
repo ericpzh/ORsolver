@@ -32,17 +32,17 @@ def northwest(cost):
   for i in range(len(cost)):
     for j in range(len(cost[i])):
       minnumber = min(cost[i][len(cost[i])-1],cost[len(cost)-1][j])
-      cost[i][j] = minnumber
+      matrix[i][j] = minnumber
       if(cost[i][len(cost[i])-1] <= cost[len(cost)-1][j]):
         for k in range(j,len(cost[i])):
-          cost[i][k] = "--"
+          matrix[i][k] = "--"
         i += 1
       else:
         for k in range(i,len(cost):
-          cost[k][j] = "|"
+          matrix[k][j] = "|"
         j += 1
-      cost[i][len(cost[i])-1] -= minnumber
-      cost[len(cost)-1][j] -= minnumber               
+      matrix[i][len(cost[i])-1] -= minnumber
+      matrix[len(cost)-1][j] -= minnumber               
   return matrix
       
 ##Vogel's approx of initialization
@@ -50,6 +50,7 @@ def northwest(cost):
 ##return a combine initialize matrix
 def vogel(cost):
   matrix = deepcopy(cost)
+  penaltycol, penaltyrow = [],[]
   int i = 0
   while(i < (len(cost)-1+len(cost[0])-1-1)):
                        
