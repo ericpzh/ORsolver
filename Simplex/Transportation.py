@@ -50,6 +50,9 @@ def northwest(cost):
 ##return a combine initialize matrix
 def vogel(cost):
   matrix = deepcopy(cost)
+  int i = 0
+  while(i < (len(cost)-1+len(cost[0])-1-1)):
+                       
   
 ##solver function
 ##Takes in cost matrix, initialize matrix, bool debug(Print steps if True)
