@@ -24,6 +24,19 @@ demand = np.concatenate((demand,[0]),axis=1)
 matrix = np.concatenate((cost,supply),axis=1)
 matrix = np.concatenate((matrix,demand),axis=0)
 ##Northwest corner rule of initialization
+##Takes in combine matrix
+##return a combine initialize matrix
 def northwest(matrix):
+  
 ##Vogel's approx of initialization
+##Takes in combine matrix
+##return a combine initialize matrix
 def vogel(matrix):
+  
+##solver function
+##Takes in initialize matrix, bool debug(Print steps if True)
+##return matrix of optimal assignment
+def transportationSolve(matrix,debug):
+  
+##runit
+transportationSolve(northwest(matrix))
