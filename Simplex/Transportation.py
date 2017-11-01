@@ -53,6 +53,10 @@ def vogel(cost):
   penaltycol, penaltyrow = [],[]
   int i = 0
   while(i < (len(cost)-1+len(cost[0])-1-1)):
+    for i in range(len(cost)):
+      penaltycol.append(np.amin(cost[cost != np.amin(cost[i]) and cost != cost[i][len(cost)-1]])
+    for j in range(len(cost[0])):
+      penaltyrow.append()
                        
   
 ##solver function
