@@ -13,4 +13,8 @@ Capable of:
 
 2)Solving payoff matrix LP
 
+---- In progress  ----
+
+3)Solving transortation problem (NWcorner/Vogel approxi) (transportation simplex)
+
 No Big M yet
