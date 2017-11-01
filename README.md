@@ -7,8 +7,10 @@ Output of Fraction(supported)
 
 UIUC IE310HW helper (kind of)
 
-Capable of: Solving standard form LP
+Capable of: 
 
-            Solving payoff matrix LP
+1)Solving standard form LP
+
+2)Solving payoff matrix LP
 
 No Big M yet
