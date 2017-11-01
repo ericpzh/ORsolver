@@ -27,9 +27,10 @@ matrix = np.concatenate((matrix,demand),axis=0)
 ##Takes in combine cost matrix
 ##return a combine initialize matrix
 def northwest(cost):
-  cost = np.array([[]])
+  matrix = np.array([[]])
   for i in range(len(cost)):
     for j in range(len(cost[i])):
+  return matrix
       
 ##Vogel's approx of initialization
 ##Takes in combine cost matrix
