@@ -25,8 +25,10 @@ How to use it:
 
 2) Download the libaraies in each file that you need (numpy etc.)
 
-3) Change the numbers in the input matrices and hit run!
+3) Make sure the file structure is correct
 
-4) Read the comments and find out what each function offers
+4) Change the numbers in the input matrices (within the code) and hit run!
 
-5) Check back repo for latest update
+5) Read the comments and find out what each function offers
+
+6) Check back repo for latest update
