@@ -1,8 +1,6 @@
 # Simplex
 Linear Program Simplex method solver
 
-Input of standard Form
-
 Output of Fraction(supported)
 
 UIUC IE310HW helper (kind of)
@@ -17,4 +15,18 @@ Capable of:
 
 3)Solving transortation problem (NWcorner/Vogel approxi) (transportation simplex)
 
-No Big M yet
+4)Big M...
+
+
+
+How to use it:
+
+1) Download the zip and a python3 IDE (pycharm etc.)
+
+2) Download the libaraies in each file that you need (numpy etc.)
+
+3) Change the numbers in the input matrices and hit run!
+
+4) Read the comments and find out what each function offers
+
+5) Check back repo for latest update
