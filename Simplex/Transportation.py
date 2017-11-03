@@ -7,7 +7,7 @@ In progress solver for transportation problem
 ##Main input
 ##input costs,supply,demand of a transportation matrix
 ## [Cost] [Supply]
-##[Demand]
+##[Demand]  [0]
 cost = np.array([
 	[16, 16, 13, 22, 17],
 	[14, 14, 13, 19, 15],
