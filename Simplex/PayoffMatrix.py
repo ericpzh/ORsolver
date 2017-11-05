@@ -39,4 +39,4 @@ def PayoffMatrixSolve(payoffMatrix,debug):
     return ls
 
 ##runit
-PayoffMatrixSolve(Matrix)
+PayoffMatrixSolve(Matrix,True)
