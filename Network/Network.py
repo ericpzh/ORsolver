@@ -12,8 +12,7 @@ It might run slowly
 G = nx.DiGraph()
 # edit the list with 'tuples' ('Origin','Destination','Weight')
 # !!! keep source/origin to be 'O' and target/sink to be 'T' in order for the args to compile
-elist = [('O','A',2),('O','B',5),('O','C',4),('A','B',2),('C','B',1),('B','E',3),('C','E',4),
-         ('B','D',4),('A','D',7),('D','E',1),('D','T',5),('E','T',7)]
+elist = [('O','A',5),('O','B',7),('O','C',4),('A','B',1),('B','C',2),('B','E',5),('C','E',4),('B','D',4),('A','D',3),('E','D',1),('D','T',9),('E','T',6)]
 G.add_weighted_edges_from(elist)
 
 ##Minimum spanning tree problem with Prim's algorithm
@@ -44,22 +43,31 @@ def shortestpath(G):
     print("Optimal Objective value is : " + str(sum))
     return T
 
-##Max flow problem
-##Takes in nx.Graph() G a undirected networkX graph
+##Max flow problem with augmenting path algorithm
+##Takes in nx.Graph() G a directed networkX graph
 ##return a nx.Graph() T a subgraph of sp of G
 def maxflow(G):
-    T = nx.Graph()
+    # turn weight into capacity
+    T = nx.DiGraph()
+    elist = list(nx.edge_dfs(G))
+    for i in range(len(elist)):
+        data = G.get_edge_data(elist[i][0], elist[i][1])['weight']
+        T.add_edge(elist[i][0],elist[i][1],capacity = data)
+    #calculate max flow
+    flow_value, flow_dict = nx.maximum_flow(T, 'O', 'T')
+    print(flow_dict)
+    print("Optimal Objective value is : " + str(flow_value))
     return T
 
 ##Main function of the class
 ##Takes in string args to run with graph G, bool debug(show original graph if true)
 ##List of args "mst"->min spanning tree/"sp"->shortest path/"mf"->max flow
 def NetworkSolve(args,debug):
-    if(args == "mst"):
+    if(args == "mst"): #min spanning tree
         T = minimumSpanningTree(G)
-    elif(args == "sp"):
+    elif(args == "sp"): #shortest path
         T = shortestpath(G)
-    elif(args == 'mf'):
+    elif(args == 'mf'): #max flow
         T = maxflow(G)
     else:
         print("Not yet implementated")
@@ -76,4 +84,4 @@ def NetworkSolve(args,debug):
     plt.show()
 
 ##runit
-NetworkSolve("sp",False)
+NetworkSolve("mf",False)
