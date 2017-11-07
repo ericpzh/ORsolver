@@ -3,7 +3,7 @@ Linear Program Simplex method solver / Basic Graph args solver
 
 Output of Fraction(supported)
 
-UIUC IE310HW helper (kind of)
+UIUC IE310 HW helper
 
 Capable of: 
 
