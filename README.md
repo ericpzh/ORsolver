@@ -1,5 +1,5 @@
-# Simplex
-Linear Program Simplex method solver
+# Basic OR solver
+Linear Program Simplex method solver / Basic Graph args solver
 
 Output of Fraction(supported)
 
@@ -11,11 +11,13 @@ Capable of:
 
 2)Solving payoff matrix LP
 
+3)Solving simple graph algorithm e.g.(min spanning tree,shortest path etc.)
+
 ---- In progress  ----
 
 3)Solving transortation problem (NWcorner/Vogel approxi) (transportation simplex)
 
-4)Solving simple graph algorithm e.g.(min spanning tree, Prim's algs etc.)
+4)Solving simple graph algorithm e.g.(max flow etc.)
 
 5)Big M...
 
