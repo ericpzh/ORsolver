@@ -9,7 +9,7 @@ It might run slowly
 ## since I use the networkX library,
 ## go to their page to check out how to input graphs or follow my example
 # G = nx.Graph() if undirected / G = nx.DiGraph() if directed
-G = nx.Graph()
+G = nx.DiGraph()
 # edit the list with 'tuples' ('Origin','Destination','Weight')
 # !!! keep source/origin to be 'O' and target/sink to be 'T' in order for the args to compile
 elist = [('O','A',2),('O','B',5),('O','C',4),('A','B',2),('C','B',1),('B','E',3),('C','E',4),
@@ -35,7 +35,7 @@ def minimumSpanningTree(G):
 ##return a nx.DiGraph() T a subgraph of sp of G
 def shortestpath(G):
     T = nx.DiGraph()
-    elist = list(nx.shortest_path(G, source='O', target='T'))
+    elist = nx.dijkstra_path(G,'O','T')
     sum = 0;
     for i in range(len(elist)-1):
         data = G.get_edge_data(elist[i],elist[i+1])['weight']
@@ -50,6 +50,7 @@ def shortestpath(G):
 def maxflow(G):
     T = nx.Graph()
     return T
+
 ##Main function of the class
 ##Takes in string args to run with graph G, bool debug(show original graph if true)
 ##List of args "mst"->min spanning tree/"sp"->shortest path/"mf"->max flow
@@ -75,4 +76,4 @@ def NetworkSolve(args,debug):
     plt.show()
 
 ##runit
-NetworkSolve("mst",False)
+NetworkSolve("sp",False)
