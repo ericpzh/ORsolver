@@ -15,7 +15,9 @@ Capable of:
 
 3)Solving transortation problem (NWcorner/Vogel approxi) (transportation simplex)
 
-4)Big M...
+4)Solving simple graph algorithm e.g.(min spanning tree, Prim's algs etc.)
+
+5)Big M...
 
 
 
