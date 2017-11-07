@@ -2,29 +2,47 @@ import networkx as nx
 import matplotlib.pyplot as plt
 '''
 In dev solver for graph problems
+It might run slowly
 '''
 ##Main input
 ##Input for a graph is tricky,
 ## since I use the networkX library,
 ## go to their page to check out how to input graphs or follow my example
 # G = nx.Graph() if undirected / G = nx.DiGraph() if directed
-G = nx.Graph()
+G = nx.DiGraph()
 # edit the list with 'tuples' ('Origin','Destination','Weight')
+# !!! keep source/origin to be 'O' and target/sink to be 'T' in order for the args to compile
 elist = [('O','A', 2 ),('O','B',  5 ),('O','C',  4 ),('A','B',  2 ),('C','B',  1 ),('B','E',3),('C','E',  4 ),('B','D',  4 ),('A','D',  7 ),('D','E',  1 ),('D','T',  5 ),('E','T',  7 )]
 G.add_weighted_edges_from(elist)
 
-##Minimum spanning tree problem with Prim's algrs
+##Minimum spanning tree problem with Prim's algorithm
 ##Takes in nx.Graph() G a undireted networkX Graph
 ##return a nx.Graph() T a subgraph of mst of G
 def minimumSpanningTree(G):
     return nx.minimum_spanning_tree(G)
 
+##Shortest path problem with Dijkstra's algorithm
+##Takes in nx.DiGraph() G a directed networkX graph
+##return a nx.DiGraph() T a subgraph of sp of G
+def shortestpath(G):
+    T = nx.DiGraph()
+    elist = list(nx.shortest_path(G, source='O', target='T'))
+    sum = 0;
+    for i in range(len(elist)-1):
+        data = G.get_edge_data(elist[i],elist[i+1])['weight']
+        T.add_edge(elist[i],elist[i+1],weight=data)
+        sum += data
+    print("Optimal Objective value is : " + str(sum))
+    return T
+
 ##Main function of the class
 ##Takes in string args to run with graph G, bool debug(show original graph if true)
-##List of args "mst"->min spanning tree/
+##List of args "mst"->min spanning tree/"sp"->shortest path
 def NetworkSolve(args,debug):
     if(args == "mst"):
         T = minimumSpanningTree(G)
+    elif(args == "sp"):
+        T = shortestpath(G)
     else:
         print("Not yet implementated")
     if(debug):
@@ -40,4 +58,4 @@ def NetworkSolve(args,debug):
     plt.show()
 
 ##runit
-NetworkSolve("mst",False)
+NetworkSolve("sp",False)
