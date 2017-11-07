@@ -7,15 +7,17 @@ UIUC IE310HW helper (kind of)
 
 Capable of: 
 
-1)Solving standard form LP
+1)Solving standard form LP (Simplex/Main.py)
 
-2)Solving payoff matrix LP
+2)Solving payoff matrix LP (Simplex/PayoffMatrix.py)
 
-3)Solving simple graph algorithm e.g.(min spanning tree,shortest path etc.)
+3)Solving simple graph algorithm e.g.(min spanning tree,shortest path etc.) (Network/Network.py)
+
+99)Easy AI for breakthrough game (able to play with it as user/AI) (Simplex/BreakThru.py)
 
 ---- In progress  ----
 
-3)Solving transortation problem (NWcorner/Vogel approxi) (transportation simplex)
+3)Solving transortation problem (NWcorner/Vogel approxi) (transportation simplex) (Simplex/Transportation.py)
 
 4)Solving simple graph algorithm e.g.(max flow etc.)
 
