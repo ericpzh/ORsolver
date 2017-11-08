@@ -23,8 +23,6 @@ Capable of:
 
 4)Solving Assignment problem (Hungarian algorithm) (Simplex/Transportation.py)
 
-5)Big M...
-
 
 
 How to use it:
