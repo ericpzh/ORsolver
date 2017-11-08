@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 '''
-In dev solver for graph problems
+Solver for graph problems
 It might run slowly
 '''
 ##Main input
