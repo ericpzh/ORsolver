@@ -1,5 +1,5 @@
 import numpy as np
-from Main import simplexSolve
+from Simplex import simplexSolve
 '''
 Given a Payoff Matrix, solve it with Simplex method 
 '''
