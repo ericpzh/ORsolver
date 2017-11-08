@@ -11,13 +11,15 @@ Capable of:
 
 2)Solving payoff matrix LP (Simplex/PayoffMatrix.py)
 
-3)Solving simple graph algorithm e.g.(min spanning tree,shortest path,max flow) (Network/Network.py)
+3)Solving transortation initialzation (NWcorner/Vogel approxi) (Simplex/Transportation.py)
+
+4)Solving simple graph algorithm e.g.(min spanning tree,shortest path,max flow) (Network/Network.py)
 
 99)Easy AI for breakthrough game (able to play with it as user/AI) (Simplex/BreakThru.py)
 
 ---- In progress  ----
 
-3)Solving transortation problem (NWcorner/Vogel approxi) (transportation simplex) (Simplex/Transportation.py)
+3)Solving transortation problem (transportation simplex) (Simplex/Transportation.py)
 
 4)Solving Assignment problem (Hungarian algorithm) (Simplex/Transportation.py)
 
