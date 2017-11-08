@@ -7,7 +7,7 @@ UIUC IE310 HW helper
 
 Capable of: 
 
-1)Solving standard form LP (Simplex/Main.py)
+1)Solving standard form LP (Simplex/Simplex.py)
 
 2)Solving payoff matrix LP (Simplex/PayoffMatrix.py)
 
