@@ -55,9 +55,13 @@ def maxflow(G):
         T.add_edge(elist[i][0],elist[i][1],capacity = data)
     #calculate max flow
     flow_value, flow_dict = nx.maximum_flow(T, 'O', 'T')
-    print(flow_dict)
+    elist = [(key, subkey, value) for key, subdict in flow_dict.items() for subkey, value in subdict.items()]
+    #subgraph containing only flow
+    R = nx.DiGraph()
+    for i in elist:
+        R.add_edge(i[0],i[1],weight = i[2])
     print("Optimal Objective value is : " + str(flow_value))
-    return T
+    return R
 
 ##Main function of the class
 ##Takes in string args to run with graph G, bool debug(show original graph if true)
