@@ -23,6 +23,8 @@ Capable of:
 
 4)Solving Assignment problem (Hungarian algorithm) (Simplex/Transportation.py)
 
+99)Easy Ai for pacman (Network/Pacman.py)
+
 
 
 How to use it:
