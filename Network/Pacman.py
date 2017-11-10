@@ -17,7 +17,32 @@ import Network
 ##Takes in 2d-array:broad int:count number of remaining o
 ##return tuple (2d-array:broad , int:count number of remaining o)
 def Move(borad,count):
-    
+    #search for '>'
+    x,y,d = 0,0,1
+    for i in range(len(borad)):
+        for j in range(len(borad[i])):
+            if(borad[i][j] == '>'):
+                x,y,d = i,j,-1
+                i,j = len(borad),len(borad[0])
+            elif(borad[i][j] == '<'):
+                x,y,d = i,j,1
+                i, j = len(borad), len(borad[0])
+    #next move
+    borad[x][y] = ' '
+    if(borad[x+1][y] == 'o'):
+        borad[x + 1][y] = '<'
+        count -= 1
+    elif(borad[x-1][y] == 'o'):
+        borad[x - 1][y] = '>'
+        count -= 1
+    elif(borad[x][y+1] == 'o'):
+        borad[x][y + 1] = '>'
+        count -= 1
+    elif(borad[x][y-1] == 'o'):
+        borad[x][y - 1] = '>'
+        count -= 1
+    else:
+        count -= 0
     return (borad,count)
 
 ##Main function
