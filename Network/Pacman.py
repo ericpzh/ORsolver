@@ -14,36 +14,30 @@ import Network
 ----------------------------------------
 '''
 ##Move function to calculate next move
-##Takes in 2d-array:broad int:count number of remaining o
+##Takes in 2d-array:broad, int:count number of remaining o,int x,y: x y position of '>'
 ##return tuple (2d-array:broad , int:count number of remaining o)
-def Move(borad,count):
-    #search for '>'
-    x,y,d = 0,0,1
-    for i in range(len(borad)):
-        for j in range(len(borad[i])):
-            if(borad[i][j] == '>'):
-                x,y,d = i,j,-1
-                i,j = len(borad),len(borad[0])
-            elif(borad[i][j] == '<'):
-                x,y,d = i,j,1
-                i, j = len(borad), len(borad[0])
+def Move(broad,count,x,y):
     #next move
-    borad[x][y] = ' '
-    if(borad[x+1][y] == 'o'):
-        borad[x + 1][y] = '<'
+    broad[x][y] = ' '
+    if(broad[x+1][y] == 'o'):
+        broad[x + 1][y] = '>'
+        x = x+1
         count -= 1
-    elif(borad[x-1][y] == 'o'):
-        borad[x - 1][y] = '>'
+    elif(broad[x-1][y] == 'o'):
+        broad[x - 1][y] = '>'
+        x = x-1
         count -= 1
-    elif(borad[x][y+1] == 'o'):
-        borad[x][y + 1] = '>'
+    elif(broad[x][y+1] == 'o'):
+        broad[x][y + 1] = '>'
+        y = y+1
         count -= 1
-    elif(borad[x][y-1] == 'o'):
-        borad[x][y - 1] = '>'
+    elif(broad[x][y-1] == 'o'):
+        broad[x][y - 1] = '>'
+        y = y-1
         count -= 1
     else:
         count -= 0
-    return (borad,count)
+    return (broad,count,x,y)
 
 ##Main function
 ##Take in string:path file location
@@ -61,13 +55,20 @@ def Pacman(path):
             j += 1
         else:
             broad[j].append(i)
-            if(broad[j] == 'o'):
-                count += 1
     # print
     for i in broad:
         print(*i)
-    while(count > 0):
-        (broad,count) = Move(broad,count)
+    #search for '>'
+    x,y = 0,0
+    for i in range(len(broad)):
+        for j in range(len(broad[i])):
+            if(broad[i][j] == '>'):
+                x,y = i,j
+            if(broad[i][j] == 'o'):
+                count += 1
+    #move it
+    while(count > 150):
+        (broad,count,x,y) = Move(broad,count,x,y)
         #print
         for i in broad:
             print(*i)
