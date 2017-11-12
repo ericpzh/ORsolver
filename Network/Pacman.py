@@ -36,7 +36,7 @@ def Move(broad,count,x,y):
         y = y-1
         count -= 1
     else:
-        count -= 0
+        count -= count
     return (broad,count,x,y)
 
 ##Main function
@@ -67,7 +67,7 @@ def Pacman(path):
             if(broad[i][j] == 'o'):
                 count += 1
     #move it
-    while(count > 150):
+    while(count > 0):
         (broad,count,x,y) = Move(broad,count,x,y)
         #print
         for i in broad:
