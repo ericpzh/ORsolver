@@ -2,16 +2,16 @@ import numpy as np
 import networkx as nx
 import Network
 '''
-----------------------------------------
--oooooooooooooooooooooooooooooooooooooo-
--o----o----o----o-----o----o----o-----o-
--o----oooooo----o-----oooooo----o-----o-
--oooooo----o----ooooooo----o----ooooooo-
--o----o----oooooo-----o----oooooo-----o-
--o----oooooo----o-----oo>ooo----o-----o-
--o----o----o----o-----o----o----o-----o-
--oooooooooooooooooooooooooooooooooooooo-
-----------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%......................................%
+%.%%%%.%%%%.%%%%.%%%%%.%%%%.%%%%.%%%%%.%
+%.%%%%......%%%%.%%%%%......%%%%.%%%%%.%
+%......%%%%.%%%%.......%%%%.%%%%.......%
+%.%%%%.%%%%......%%%%%.%%%%......%%%%%.%
+%.%%%%......%%%%.%%%%%..P...%%%%.%%%%%.%
+%.%%%%.%%%%.%%%%.%%%%%.%%%%.%%%%.%%%%%.%
+%......................................%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 '''
 ##Move function to calculate next move
 ##Takes in 2d-array:broad, int:count number of remaining o,int x,y: x y position of '>'
@@ -19,20 +19,20 @@ import Network
 def Move(broad,count,x,y):
     #next move
     broad[x][y] = ' '
-    if(broad[x+1][y] == 'o'):
-        broad[x + 1][y] = '>'
+    if(broad[x+1][y] == '.'):
+        broad[x + 1][y] = 'P'
         x = x+1
         count -= 1
-    elif(broad[x-1][y] == 'o'):
-        broad[x - 1][y] = '>'
+    elif(broad[x-1][y] == '.'):
+        broad[x - 1][y] = 'P'
         x = x-1
         count -= 1
-    elif(broad[x][y+1] == 'o'):
-        broad[x][y + 1] = '>'
+    elif(broad[x][y+1] == '.'):
+        broad[x][y + 1] = 'P'
         y = y+1
         count -= 1
-    elif(broad[x][y-1] == 'o'):
-        broad[x][y - 1] = '>'
+    elif(broad[x][y-1] == '.'):
+        broad[x][y - 1] = 'P'
         y = y-1
         count -= 1
     else:
@@ -62,9 +62,9 @@ def Pacman(path):
     x,y = 0,0
     for i in range(len(broad)):
         for j in range(len(broad[i])):
-            if(broad[i][j] == '>'):
+            if(broad[i][j] == 'P'):
                 x,y = i,j
-            if(broad[i][j] == 'o'):
+            if(broad[i][j] == '.'):
                 count += 1
     #move it
     while(count > 0):
