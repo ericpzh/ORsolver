@@ -1,6 +1,8 @@
 import numpy as np
 import heapq
 from copy import copy, deepcopy
+import networkx as nx
+import matplotlib.pyplot as plt
 
 '''
 In dev solver for transportation problem
@@ -31,9 +33,9 @@ matrix = np.concatenate((matrix, demand), axis=0)
 
 
 ##Northwest corner rule of initialization
-##Takes in combine cost matrix
-##return a combine initialize matrix
-def northwest(cost):
+##Takes in combine cost matrix, bool debug (print if true)
+##return a tuple (combine initialize matrix, initialize string matrix)
+def northwest(cost,debug):
     matrix = np.array([[-1 for x in range(len(cost[0])-1)] for y in range(len(cost)-1)])
     supply = np.array([cost[:len(cost[0])-2,len(cost)]])
     supply = supply.transpose()
@@ -68,18 +70,19 @@ def northwest(cost):
                 matrix[i][j] = 0
             else:
                 printmatrix[i][j] = matrix[i][j]
-    print("Northwest corner result ('-' as nonbasic var): ")
-    for i in printmatrix:
-        print(i)
-    print("Initialize matrix : ")
-    print(matrix)
-    return matrix
+    if(debug):
+        print("Northwest corner result ('-' as nonbasic var): ")
+        for i in printmatrix:
+            print(i)
+        print("Initialize matrix : ")
+        print(matrix)
+    return (matrix,printmatrix)
 
 
 ##Vogel's approx of initialization
-##Takes in combine cost matrix
-##return a combine initialize matrix
-def vogel(cost):
+##Takes in combine cost matrix, bool debug (print if true)
+##return a tuple (combine initialize matrix, initialize string matrix)
+def vogel(cost,debug):
     costcopy = deepcopy(cost)
     costcopy = costcopy[:len(costcopy) - 1, :len(costcopy[0]) - 1]
     matrix = np.array([[-1 for x in range(len(cost[0])-1)] for y in range(len(cost)-1)])
@@ -89,7 +92,6 @@ def vogel(cost):
     matrix = np.concatenate((matrix, supply), axis=1)
     matrix = np.concatenate((matrix, demand), axis=0)
     i = 0
-    print((len(cost)  + len(cost[0]) - 4 ))
     while (i < (len(cost)  + len(cost[0]) - 4 )):
         penaltycol, penaltyrow = [[]], [[]]
         for j in costcopy:
@@ -164,25 +166,103 @@ def vogel(cost):
                 matrix[i][j] = 0
             else:
                 printmatrix[i][j] = matrix[i][j]
-    print("Vogel's approximation result ('-' as nonbasic var): ")
-    for i in printmatrix:
-        print(i)
-    print("Initialize matrix : ")
-    print(matrix)
-    return matrix
+    if(debug):
+        print("Vogel's approximation result ('-' as nonbasic var): ")
+        for i in printmatrix:
+            print(i)
+        print("Initialize matrix : ")
+        print(matrix)
+    return (matrix,printmatrix)
 
 ##solver function
 ##Takes in cost matrix, bool debug(Print steps if True),
 ##         optional string method = method of initialization (default:"nw" | "nw" ->northwest corner "vog" ->Vogel's)
-##         optional matrix = custom initialized matrix
+##         optional matrix = custom initialized matrix/ printmatrix = custom initialized nested list with basicvar
 ##return matrix of optimal assignment
-def transportationSolve(cost, debug ,method = None, matrix = None):
-    if(matrix == None):
-        if(method == "vog"):
-            matrix = vogel(cost)
+def transportationSolve(cost, debug ,method = None, matrix = None, printmatrix = None):
+    if(matrix.any() == None or printmatrix == None):
+        if(method == "nw"):
+            a = northwest(cost,debug)
+            matrix = a[0]
+            printmatrix = a[1]
         else:
-            matrix = northwest(cost)
-    return
+            a = vogel(cost,debug)
+            matrix = a[0]
+            printmatrix = a[1]
+    while(True):
+        ijmatrix = deepcopy(cost)
+        subcost = cost[:len(cost)-1,:len(cost[0])-1]
+        ##searching for Entering BV
+        bvlist = []
+        for i in printmatrix:
+            bvlist.append(len(i) - i.count('-'))
+        ijmatrix.fill(-1)
+        interest = [(np.argmax(bvlist), 2)]
+        ijmatrix[interest[0][0]][len(ijmatrix[0]) - 1] = 0
+        while (len(interest) > 0):
+            pt = interest[0][0]
+            dir = interest[0][1]
+            del interest[0]
+            if (dir % 2 == 0):
+                for j in range(len(ijmatrix[0]) - 1):
+                    if (printmatrix[pt][j] != '-' and ijmatrix[len(ijmatrix) - 1][j] == -1):
+                        ijmatrix[len(ijmatrix) - 1][j] = subcost[pt][j] - ijmatrix[pt][len(ijmatrix[0]) - 1]
+                        interest.append((j, 1))
+            else:
+                for j in range(len(ijmatrix) - 1):
+                    if (printmatrix[j][pt] != '-' and ijmatrix[j][len(ijmatrix[0]) - 1] == -1):
+                        ijmatrix[j][len(ijmatrix[0]) - 1] = subcost[j][pt] - ijmatrix[len(ijmatrix) - 1][pt]
+                        interest.append((j, 2))
+        for i in range(len(ijmatrix) - 1):
+            for j in range(len(ijmatrix[0]) - 1):
+                if (printmatrix[i][j] == '-'):
+                    ijmatrix[i][j] = subcost[i][j] - ijmatrix[i][len(ijmatrix[0]) - 1] - ijmatrix[len(ijmatrix) - 1][j]
+                else:
+                    ijmatrix[i][j] = 0
+        subijmatrix = ijmatrix[:len(ijmatrix) - 1, :len(ijmatrix[0]) - 1]
+        enterX = np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[0]
+        enterY = np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[1]
+        if(debug):
+            print("Entering var is :"+ str(subijmatrix[enterX][enterY]))
+            print(ijmatrix)
+        ##identifying loop
+        matrix[np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[0]][np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[1]] = -1
+        printmatrix[np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[0]][np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[1]] = '-1'
+        for i in printmatrix:
+            print(i)
+        edgelist = []
+        for i in range(len(printmatrix)):
+            for j in range(len(printmatrix[0])):
+                if(printmatrix[i][j] != '-'):
+                    for col in range(len(printmatrix)):
+                        if(printmatrix[col][j] != '-' and col != i and ((col,j),(i,j)) not in edgelist):
+                            edgelist.append(((i,j),(col,j)))
+                    for row in range(len(printmatrix[0])):
+                        if(printmatrix[i][row] != '-' and row != j and ((i,row),(i,j)) not in edgelist):
+                            edgelist.append(((i,j),(i,row)))
+                    print(edgelist)
+        G = nx.Graph(edgelist)
+        print(nx.find_cycle(G, orientation='original'))
+        break
+        try:
+            cycle = (nx.find_cycle(G, orientation='original'))
+        except:
+            break
+    if(debug):
+        print("Final Allocation :")
+        print(matrix)
+        sum = 0
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                sum += matrix[i][j]*cost[i][j]
+        print("Final Sum Z =:" + str(sum))
+    return matrix
 
 ##runit
-transportationSolve(matrix,True)
+#example matrix,printmatrix input:
+m = np.array([[0,0,40,0,10],[30,0,30,0,0],[0,20,0,30,0],[0,0,0,0,50]])
+pm = [["-","-","40","-","10"],
+      ["30","-","30","-","-"],
+      ["0","20","-","30","-"],
+      ["-","-","-","-","50"]]
+transportationSolve(matrix,True,matrix = m,printmatrix=pm)
