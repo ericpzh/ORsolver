@@ -23,7 +23,7 @@ Capable of:
 
 4)Solving Assignment problem (Hungarian algorithm) (Simplex/Transportation.py)
 
-5)Solving Simple Non-linearP (Newton's method) (NLP.py)
+5)Solving Simple Non-linearP (Newton's method) (NonLinear/NLP.py)
 
 99)Easy Ai for pacman (Network/Pacman.py)
 
