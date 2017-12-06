@@ -49,7 +49,7 @@ def newton(xL,lvl,debug):
             return nextx
         currx = nextx
         count += 1
-    return
+    return currx
 
 ##1Dimensional Golden Ratio Search
 ##Takes in float lvl: accuracy level, bool debug (print if true)
