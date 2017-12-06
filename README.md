@@ -27,6 +27,8 @@ Capable of:
 
 5)Solving Simple Non-linearP (Golden section, Gradient Search, MdNewton's method, KKT Conditon) (NonLinear/ConvexND.py)
 
+6)Solving Integer program (Branch and Bound Method) (NonLinear/Integer.py)
+
 99)Easy Ai for pacman (Network/Pacman.py)
 
 
