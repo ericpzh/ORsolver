@@ -39,7 +39,7 @@ How to use it:
 
 2) Download the libaraies in each file that you need (numpy etc.)
 
-3) Make sure the file structure is correct (for pycharm create your own project and copy all files you need into the project folder (leaving the original folder alone and only copy the file))
+3) Make sure the file structure is correct (for pycharm create your own project and copy all files you need into the project folder (leaving the original folder alone and only copy the files))
 
 4) Change the numbers in the input matrices (within the code) and hit run!
 
