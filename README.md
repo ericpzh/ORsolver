@@ -15,7 +15,7 @@ Capable of:
 
 4)Solving simple graph algorithm e.g.(min spanning tree,shortest path,max flow) (Network/Network.py)
 
-5)Solving Simple Non-linearP (1dBisection, 1dNewton's method) (NonLinear/Convex.py)
+5)Solving Simple Non-linearP (1dBisection, 1dNewton's method) (NonLinear/Convex1D.py)
 
 99)Easy AI for breakthrough game (able to play with it as user/AI) (Simplex/BreakThru.py)
 
@@ -25,7 +25,7 @@ Capable of:
 
 4)Solving Assignment problem (Hungarian algorithm) (Simplex/Transportation.py)
 
-5)Solving Simple Non-linearP (Golden section, Gradient Search, MdNewton's method, KKT Conditon) (NonLinear/NLP.py)
+5)Solving Simple Non-linearP (Golden section, Gradient Search, MdNewton's method, KKT Conditon) (NonLinear/ConvexND.py)
 
 99)Easy Ai for pacman (Network/Pacman.py)
 
