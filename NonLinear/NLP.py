@@ -30,11 +30,11 @@ def bisection(xL,xU,lvl,debug):
             return xM
     return (xL+xU)/2
 
-##MultiDimensional Newton's Methods
+##1Dimensional Newton's Methods
 ##Takes in float lvl: accuracy level, bool debug (print if true)
 ##         float xL: current x
 ##Return float result (Max/Min)
-def newton(xL,lvl,debug):
+def newton1D(xL,lvl,debug):
     def dF(x1):
         return sym.diff(F(x),x,1).evalf(subs = {x : x1})
     def dF2(x1):
@@ -82,7 +82,7 @@ def NLsolve(xL = None,xU = None,lvl,debug,method = None):
     elif(method == 'bs'):
         return bisection(xL,xU,lvl,debug)
     else:
-        return newton(xL,lvl, debug)
+        return newton1D(xL,lvl, debug)
 
 ##Runit
 NLsolve(0,1,lvl,True)
