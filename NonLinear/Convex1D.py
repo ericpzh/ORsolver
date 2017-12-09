@@ -2,19 +2,25 @@ import numpy as np
 import sympy as sym
 from sympy import *
 import math
+
 ##Main input function
 ##e.g. y = -4x^4-5x^2+3x
 def F(x):
     return -4*x**4-5*x**2+3*x
+
 ##Accuracy level:
 lvl = 0.005
+
 ##Lower bound(bisection,golden ratio)/ Starting x(newton) (= None if don't have one)
 xL = 0
 #xL = None #Uncomment this if your don't have lower bound/ Starting x
+
 ##Upper bound (= None if don't have one)
 xU = 1
 #xU = None #Uncomment this if your don't have upper bound
+
 x = symbols('x')
+
 ##1D Bisection Search
 ##Takes in float lvl: accuracy level, bool debug (print if true)
 ##         float xL,xU for lower/upper bound
@@ -87,7 +93,7 @@ def goldenRatio(xL,xU,lvl,debug):
 ##         Optional str method: method of evaluation (nt -> newtons(default) / bs -> bisection / gr -> golden ratio)
 ##         Optional float xL(current x),xU for lower/upper bound
 ##Return result
-def NLsolve(lvl,debug,method = None,xL = None,xU = None,):
+def NLsolve1D(lvl,debug,method = None,xL = None,xU = None,):
     if(xL == None or xU == None):
         def dF(x1):
             return sym.diff(F(x),x,1).evalf(subs = {x : x1})
@@ -112,4 +118,4 @@ def NLsolve(lvl,debug,method = None,xL = None,xU = None,):
         return newton1D(xL,lvl, debug)
 
 ##Runit
-print(round(NLsolve(lvl,True,method = 'gr',xL = xL, xU = xU),6))
+print(round(NLsolve1D(lvl,True,method = 'bs',xL = xL, xU = xU),6))
