@@ -7,7 +7,12 @@ def F(x):
     return -4*x**4-5*x**2+3*x
 ##Accuracy level:
 lvl = 0.005
-
+##Lower bound(bisection,golden ratio)/ Starting x(newton) (= None if don't have one)
+xL = 0
+#xL = None #Uncomment this if your don't have lower bound/ Starting x
+##Upper bound (= None if don't have one)
+xU = 1
+#xU = None #Uncomment this if your don't have upper bound
 x = symbols('x')
 ##1D Bisection Search
 ##Takes in float lvl: accuracy level, bool debug (print if true)
@@ -16,12 +21,14 @@ x = symbols('x')
 def bisection(xL,xU,lvl,debug):
     def dF(x1):
         return sym.diff(F(x),x,1).evalf(subs = {x : x1})
-    count = 0
+    count = 1
     while(xU-xL > 2*lvl):
         xM = (xL+xU)/2
         dx = dF(xM)
         if(debug):
-            print("Iteration :" + str(count) + " xL :" + str(xL) + " xU :" + str(xU) + " xM :" + str(xM) + " dx: " + str(dx))
+            print("Iteration :" + str(count) + " xL :" + str(round(xL,6)) + " xU :" + str(round(xU,6)) + " xM :" + str(round(xM,6)) + " dx: " + str(round(dx,6)) + " (xU-xL)/2 :" + str(round((xU-xL)/2,6)))
+        if((xU-xL)/2 < 2*lvl):
+            return xM
         count += 1
         if(dx > 0):
             xL = xM
@@ -41,11 +48,11 @@ def newton1D(xL,lvl,debug):
     def dF2(x1):
         return sym.diff(F(x),x,2).evalf(subs = {x : x1})
     currx = xL
-    count = 0
+    count = 1
     while(True):
         nextx = currx - dF(currx)/dF2(currx)
         if(debug):
-            print("Iteration :" + str(count) + " xi :" + str(currx) + " df :" + str(dF(currx)) + " df2 :" + str(dF2(currx)) + " xi+1 :" + str(nextx) + " |xi+1 - xi| :" + str(abs(nextx - currx)))
+            print("Iteration :" + str(count) + " xi :" + str(round(currx,6)) + " f'(x) :" + str(round(dF(currx),6)) + " f''(x) :" + str(round(dF2(currx),6)) + " xi+1 :" + str(round(nextx,6)) + " |xi+1 - xi| :" + str(round(abs(nextx - currx),6)))
         if(abs(nextx - currx) < lvl):
             return nextx
         currx = nextx
@@ -70,12 +77,14 @@ def NLsolve(lvl,debug,method = None,xL = None,xU = None,):
         alpha = 1
         if(dF(0) > 0):
             xL = 0
-            while(dF(xL + alpha) < 0):
-                xU = xL + alpha
+            xU = xL + alpha
+            while(dF(xU) > 0):
+                xU += alpha
         elif(dF(0) < 0):
             xU = 0
-            while(dF(xU - alpha) > 0):
-                xL = xU - alpha
+            xL = xU - alpha
+            while(dF(xL) < 0):
+                xL -= alpha
         else:
             return 0
     if(method == 'gr'):
@@ -86,4 +95,4 @@ def NLsolve(lvl,debug,method = None,xL = None,xU = None,):
         return newton1D(xL,lvl, debug)
 
 ##Runit
-print(NLsolve(lvl,True,method = 'bs',xL = 0, xU = 1))
+print(round(NLsolve(lvl,True,method = 'bs',xL = xL, xU = xU),6))
