@@ -1,13 +1,14 @@
 import numpy as np
 import sympy as sym
-
+from sympy import *
 ##Main input function
-##e.g. y = x^2+x^3
+##e.g. y = -4x^4-5x^2+3x
 def F(x):
-    return x**2+x**3
+    return -4*x**4-5*x**2+3*x
 ##Accuracy level:
 lvl = 0.005
 
+x = symbols('x')
 ##1D Bisection Search
 ##Takes in float lvl: accuracy level, bool debug (print if true)
 ##         float xL,xU for lower/upper bound
@@ -18,7 +19,7 @@ def bisection(xL,xU,lvl,debug):
     count = 0
     while(xU-xL > 2*lvl):
         xM = (xL+xU)/2
-        dx = df(xM)
+        dx = dF(xM)
         if(debug):
             print("Iteration :" + str(count) + " xL :" + str(xL) + " xU :" + str(xU) + " xM :" + str(xM) + " dx: " + str(dx))
         count += 1
@@ -62,8 +63,8 @@ def goldenRatio(lvl,debug):
 ##         Optional str method: method of evaluation (nt -> newtons(default) / bs -> bisection / gr -> golden ratio)
 ##         Optional float xL(current x),xU for lower/upper bound
 ##Return result
-def NLsolve(xL = None,xU = None,lvl,debug,method = None):
-    if(xL == None or xU = None):
+def NLsolve(lvl,debug,method = None,xL = None,xU = None,):
+    if(xL == None or xU == None):
         def dF(x1):
             return sym.diff(F(x),x,1).evalf(subs = {x : x1})
         alpha = 1
@@ -85,4 +86,4 @@ def NLsolve(xL = None,xU = None,lvl,debug,method = None):
         return newton1D(xL,lvl, debug)
 
 ##Runit
-NLsolve(0,1,lvl,True)
+print(NLsolve(lvl,True,method = 'bs',xL = 0, xU = 1))
