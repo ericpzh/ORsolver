@@ -1,6 +1,7 @@
 import numpy as np
 import sympy as sym
 from sympy import *
+import math
 ##Main input function
 ##e.g. y = -4x^4-5x^2+3x
 def F(x):
@@ -22,12 +23,12 @@ def bisection(xL,xU,lvl,debug):
     def dF(x1):
         return sym.diff(F(x),x,1).evalf(subs = {x : x1})
     count = 1
-    while(xU-xL > 2*lvl):
+    while(abs(xU-xL) > 2*lvl):
         xM = (xL+xU)/2
         dx = dF(xM)
         if(debug):
             print("Iteration :" + str(count) + " xL :" + str(round(xL,6)) + " xU :" + str(round(xU,6)) + " xM :" + str(round(xM,6)) + " dx: " + str(round(dx,6)) + " (xU-xL)/2 :" + str(round((xU-xL)/2,6)))
-        if((xU-xL)/2 < 2*lvl):
+        if(abs((xU-xL)/2) < 2*lvl):
             return xM
         count += 1
         if(dx > 0):
@@ -61,9 +62,25 @@ def newton1D(xL,lvl,debug):
 
 ##1Dimensional Golden Ratio Search
 ##Takes in float lvl: accuracy level, bool debug (print if true)
+##         float xL,xU for lower/upper bound
 ##Return float result (Max/Min)
-def goldenRatio(lvl,debug):
-    return
+def goldenRatio(xL,xU,lvl,debug):
+    gr = (math.sqrt(5) + 1) / 2
+    a = xU - (xU - xL) / gr
+    b = xL + (xU - xL) / gr
+    count = 1
+    while(abs(a-b) > lvl):
+        if(debug):
+            print("Iteration :" + str(count) + " xL :" + str(round(xL,6)) + " xU :" + str(round(xU,6)) + " x1 :" + str(round(a,6)) + " x2: " + str(round(b,6)) + " (xU-xL) :" + str(round((xU-xL),6)))
+        if(F(a) > F(b)):
+            xU = b
+        else:
+            xL = a
+        a = xU - (xU - xL) / gr
+        b = xL + (xU - xL) / gr
+        count += 1
+    return (xU+xL)/2
+
 
 ##Main method
 ##Takes in float lvl: accuracy level, bool debug (print if true)
@@ -88,11 +105,11 @@ def NLsolve(lvl,debug,method = None,xL = None,xU = None,):
         else:
             return 0
     if(method == 'gr'):
-        return goldenRatio(lvl,debug)
+        return goldenRatio(xL,xU,lvl,debug)
     elif(method == 'bs'):
         return bisection(xL,xU,lvl,debug)
     else:
         return newton1D(xL,lvl, debug)
 
 ##Runit
-print(round(NLsolve(lvl,True,method = 'bs',xL = xL, xU = xU),6))
+print(round(NLsolve(lvl,True,method = 'gr',xL = xL, xU = xU),6))
