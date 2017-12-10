@@ -1,5 +1,6 @@
 from sympy import *
-
+import numpy as np
+from numpy.linalg import inv
 ##Main input function
 #$declear variables e.g. system of x1,x2
 x1 , x2, t = symbols('x1 x2 t')
@@ -38,7 +39,24 @@ def gradientSearch(f,xcurr,lvl,debug):
 ##Takes in Sympy Function f, float array: xcurr: current point, float lvl: accuracy level, bool debug (print if True)
 ##Return result
 def newton2D(f,xcurr,lvl,debug):
-    return xcurr
+    count = 1
+    x = [[xcurr[0]], [xcurr[1]]]
+    if(debug):
+        print("Gradient :" + str([[diff(f,x1,2),diff(diff(f,x1),x2)],[diff(diff(f,x2),x1),diff(f,x2,2)]]))
+    while(True):
+        gradient = ([[round(diff(f,x1,2).evalf(subs = {x1 : x[0][0], x2 : x[1][0]}),6),round(diff(diff(f,x1),x2).evalf(subs = {x1 : x[0][0], x2 : x[1][0]}),6)],[round(diff(diff(f,x2),x1).evalf(subs = {x1 : x[0][0], x2 : x[1][0]}),6),round(diff(f,x2,2).evalf(subs = {x1 : x[0][0], x2 : x[1][0]}),6)] ])
+        dx = [[diff(f,x1).evalf(subs = {x1 : x[0][0], x2 : x[1][0]})], [diff(f,x2).evalf(subs = {x1 : x[0][0], x2 : x[1][0]})]]
+        xnext = x - np.dot(inv(np.array(gradient)),dx)
+        if(debug):
+            xi = [[round(x[0][0],6)],[round(x[1][0],6)]]
+            xn = [[round(xnext[0][0],6)],[round(xnext[1][0],6)]]
+            xp = [[round(dx[0][0],6)],[round(dx[1][0],6)]]
+            print("Iteration : " + str(count) + " xi :" + str(xi) + " Gradient : " + str(gradient) + " x' : " + str(xp) + " xi+1 :" + str(xn) + " |xi+1 - xi| = " + str(round(((xnext[0][0]-x[0][0])**2+(xnext[1][0]-xnext[1][0])**2)**0.5,6)))
+        if((xnext[0][0]-x[0][0])**2+(xnext[1][0]-xnext[1][0])**2 < lvl**2):
+            break
+        x = xnext
+        count += 1
+    return [xnext[0][0],xnext[1][0]]
 
 ##Main method
 ##Takes in Sympy Function f, float array: xcurr: current point, float lvl: accuracy level, bool debug (print if true)
@@ -51,4 +69,4 @@ def NLsolve2D(f,lvl,debug,xcurr,method = None):
         return newton2D(f,xcurr,lvl,debug)
 
 ##runit
-print((NLsolve2D(f,lvl,True,method = 'gs',xcurr = xcurr)))
+print((NLsolve2D(f,lvl,True,method = 'nt',xcurr = xcurr)))
