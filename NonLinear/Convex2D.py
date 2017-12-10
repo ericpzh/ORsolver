@@ -20,12 +20,14 @@ xcurr = [0,0]
 def gradientSearch(f,xcurr,lvl,debug):
     dx1 = diff(f,x1).evalf(subs = {x1 : xcurr[0], x2 : xcurr[1]})
     dx2 = diff(f,x2).evalf(subs = {x1 : xcurr[0], x2 : xcurr[1]})
+    if (debug):
+        print("df/dx1 :" + str(diff(f,x1)) + "  ||    df/dx2 :" + str(diff(f,x2)))
     while(dx1 > lvl or dx2 > lvl):
         xnew = [xcurr[0] + t*dx1,xcurr[1] + t*dx2]
         maxt = solve(f.subs([(x1,xnew[0]),(x2,xnew[1])]).diff(t),t)[0]
         xcurr = [xcurr[0] + maxt*diff(f,x1).evalf(subs = {x1 : xcurr[0], x2 : xcurr[1]}),xcurr[1] + maxt*diff(f,x2).evalf(subs = {x1 : xcurr[0], x2 : xcurr[1]})]
         if(debug):
-            print("xcurr :" + str(xcurr) + " x1' :" + str(round(dx1,6)) + " x2' : " + str(round(dx2,6)))
+            print("xcurr :" + str(xcurr) + " x1' :" + str(round(dx1,6)) + " x2' : " + str(round(dx2,6)) + " t :" + str(round(maxt,6)))
         dx1 = diff(f, x1).evalf(subs={x1: xcurr[0], x2: xcurr[1]})
         dx2 = diff(f, x2).evalf(subs={x1: xcurr[0], x2: xcurr[1]})
 
