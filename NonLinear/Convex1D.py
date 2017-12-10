@@ -1,12 +1,11 @@
-import numpy as np
 import sympy as sym
 from sympy import *
 import math
 
 ##Main input function
 ##e.g. y = -4x^4-5x^2+3x
-def F(x):
-    return -4*x**4-5*x**2+3*x
+x = symbols('x')
+f = -4*x**4-5*x**2+3*x
 
 ##Accuracy level:
 lvl = 0.005
@@ -19,15 +18,14 @@ xL = 0
 xU = 1
 #xU = None #Uncomment this if your don't have upper bound
 
-x = symbols('x')
 
 ##1D Bisection Search
-##Takes in float lvl: accuracy level, bool debug (print if true)
+##Takes in Sympy Function f, float lvl: accuracy level, bool debug (print if true)
 ##         float xL,xU for lower/upper bound
 ##Return float result (Max/Min)
-def bisection(xL,xU,lvl,debug):
+def bisection(f,xL,xU,lvl,debug):
     def dF(x1):
-        return sym.diff(F(x),x,1).evalf(subs = {x : x1})
+        return sym.diff(f,x,1).evalf(subs = {x : x1})
     count = 1
     while(abs(xU-xL) > 2*lvl):
         xM = (xL+xU)/2
@@ -46,14 +44,14 @@ def bisection(xL,xU,lvl,debug):
     return (xL+xU)/2
 
 ##1Dimensional Newton's Methods
-##Takes in float lvl: accuracy level, bool debug (print if true)
+##Takes in Sympy Function f, float lvl: accuracy level, bool debug (print if true)
 ##         float xL: current x
 ##Return float result (Max/Min)
-def newton1D(xL,lvl,debug):
+def newton1D(f,xL,lvl,debug):
     def dF(x1):
-        return sym.diff(F(x),x,1).evalf(subs = {x : x1})
+        return sym.diff(f,x,1).evalf(subs = {x : x1})
     def dF2(x1):
-        return sym.diff(F(x),x,2).evalf(subs = {x : x1})
+        return sym.diff(f,x,2).evalf(subs = {x : x1})
     currx = xL
     count = 1
     while(True):
@@ -67,10 +65,10 @@ def newton1D(xL,lvl,debug):
     return currx
 
 ##1Dimensional Golden Ratio Search
-##Takes in float lvl: accuracy level, bool debug (print if true)
+##Takes in Sympy Function f,float lvl: accuracy level, bool debug (print if true)
 ##         float xL,xU for lower/upper bound
 ##Return float result (Max/Min)
-def goldenRatio(xL,xU,lvl,debug):
+def goldenRatio(f,xL,xU,lvl,debug):
     gr = (math.sqrt(5) + 1) / 2
     a = xU - (xU - xL) / gr
     b = xL + (xU - xL) / gr
@@ -78,7 +76,7 @@ def goldenRatio(xL,xU,lvl,debug):
     while(abs(a-b) > lvl):
         if(debug):
             print("Iteration :" + str(count) + " xL :" + str(round(xL,6)) + " xU :" + str(round(xU,6)) + " x1 :" + str(round(a,6)) + " x2: " + str(round(b,6)) + " (xU-xL) :" + str(round((xU-xL),6)))
-        if(F(a) > F(b)):
+        if(f.evalf(subs = {x : a}) > f.evalf(subs = {x : b})):
             xU = b
         else:
             xL = a
@@ -89,14 +87,14 @@ def goldenRatio(xL,xU,lvl,debug):
 
 
 ##Main method
-##Takes in float lvl: accuracy level, bool debug (print if true)
+##Takes in Sympy Function f, float lvl: accuracy level, bool debug (print if true)
 ##         Optional str method: method of evaluation (nt -> newtons(default) / bs -> bisection / gr -> golden ratio)
 ##         Optional float xL(current x),xU for lower/upper bound
 ##Return result
-def NLsolve1D(lvl,debug,method = None,xL = None,xU = None,):
+def NLsolve1D(f,lvl,debug,method = None,xL = None,xU = None,):
     if(xL == None or xU == None):
         def dF(x1):
-            return sym.diff(F(x),x,1).evalf(subs = {x : x1})
+            return sym.diff(f,x,1).evalf(subs = {x : x1})
         alpha = 1
         if(dF(0) > 0):
             xL = 0
@@ -111,11 +109,11 @@ def NLsolve1D(lvl,debug,method = None,xL = None,xU = None,):
         else:
             return 0
     if(method == 'gr'):
-        return goldenRatio(xL,xU,lvl,debug)
+        return goldenRatio(f,xL,xU,lvl,debug)
     elif(method == 'bs'):
-        return bisection(xL,xU,lvl,debug)
+        return bisection(f,xL,xU,lvl,debug)
     else:
-        return newton1D(xL,lvl, debug)
+        return newton1D(f,xL,lvl, debug)
 
 ##Runit
-print(round(NLsolve1D(lvl,True,method = 'bs',xL = xL, xU = xU),6))
+#print(round(NLsolve1D(f,lvl,True,method = 'bs',xL = xL, xU = xU),6))
