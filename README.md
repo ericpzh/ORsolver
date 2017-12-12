@@ -25,7 +25,7 @@ Capable of:
 
 3)Solving transortation problem (transportation simplex) (Simplex/Transportation.py)
 
-4)Solving Assignment problem (Hungarian algorithm) (Simplex/Transportation.py)
+4)Solving Assignment problem (Hungarian algorithm) (Simplex/Assignment.py)
 
 7)Solving Integer program (Branch and Bound Method) (NonLinear/Integer.py)
 
