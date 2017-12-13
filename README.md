@@ -11,9 +11,9 @@ Capable of:
 
 2)Solving payoff matrix LP (LinearProgramming/PayoffMatrix.py)
 
-3)Solving transortation initialization (NWcorner/Vogel approxi) (LinearProgramming/Transportation.py)
+3)Solving transortation problem(NWcorner/Vogel approxi/transportation simplex) (LinearProgramming/Transportation.py)
 
-4)Solving Assignment problem (Hungarian algorithm) (LinearProgramming/Assignment.py)
+4)Solving sssignment problem (Hungarian algorithm) (LinearProgramming/Assignment.py)
 
 5)Solving simple graph algorithm e.g.(min spanning tree,shortest path,max flow) (Network/Network.py)
 
@@ -24,8 +24,6 @@ Capable of:
 99)Easy AI for breakthrough game (able to play with it as user/AI) (LinearProgramming/BreakThru.py)
 
 ---- In progress  ----
-
-3)Solving transortation problem (transportation simplex) (LinearProgramming/Transportation.py)
 
 8)Solving Integer program (Branch and Bound Method) (NonLinear/Integer.py)
 
