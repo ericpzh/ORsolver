@@ -190,6 +190,7 @@ def transportationSolve(cost, debug ,method = None, matrix = None, printmatrix =
             matrix = a[0]
             printmatrix = a[1]
     count = 0
+    prevEnter = (-1,-1)
     while(True):
         count += 1
         ijmatrix = deepcopy(cost)
@@ -228,8 +229,12 @@ def transportationSolve(cost, debug ,method = None, matrix = None, printmatrix =
             print("Entering var is : x"+ str(enterX + 1) + "," + str(enterY + 1))
             print("Matrix for ui, vj is :")
             print(ijmatrix)
-        if(subijmatrix[enterX][enterY] >= 0):
+        if(subijmatrix[enterX][enterY] >= 0 or (enterX,enterY) == prevEnter):
+            if(debug):
+                print("Terminate")
             break
+        else:
+            prevEnter = (enterX,enterY)
         ##identifying loop
         matrix[np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[0]][np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[1]] = -1
         printmatrix[np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[0]][np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[1]] = '-1'
@@ -277,6 +282,7 @@ def transportationSolve(cost, debug ,method = None, matrix = None, printmatrix =
             if(debug):
                 print("Cycle identified :")
                 print(cycle)
+            ##Mod Matrix add/substract
             numberlist = [matrix[i[0]][i[1]] if matrix[i[0]][i[1]] != -1 else 0 for i in cycle]
             now = cycle.index((enterX, enterY))
             next = (now + 1) % len(cycle)
@@ -322,8 +328,6 @@ def transportationSolve(cost, debug ,method = None, matrix = None, printmatrix =
                 for i in printmatrix:
                     print(i)
                 print("------------------------------------------- \n")
-        if(count > 4):
-            break
     if(debug):
         print("Final Allocation :")
         print(matrix)
