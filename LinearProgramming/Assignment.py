@@ -10,7 +10,7 @@ matrix = np.array([[37.7,32.9,33.8,37,35.4],
 
 ##Helper function of making assignment
 ##Takes in: np array() matrix
-##return:   np.array() assignment
+##return:   tuple(np.array() assignment,assignmentls)
 def Assign(matrix):
     assignment = deepcopy(matrix)
     assignmentls = []
