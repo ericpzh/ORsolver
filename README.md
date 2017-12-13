@@ -7,13 +7,13 @@ UIUC IE310 HW helper
 
 Capable of: 
 
-1)Solving standard form LP (Simplex/Simplex.py)
+1)Solving standard form LP (LinearProgramming/Simplex.py)
 
-2)Solving payoff matrix LP (Simplex/PayoffMatrix.py)
+2)Solving payoff matrix LP (LinearProgramming/PayoffMatrix.py)
 
-3)Solving transortation initialization (NWcorner/Vogel approxi) (Simplex/Transportation.py)
+3)Solving transortation initialization (NWcorner/Vogel approxi) (LinearProgramming/Transportation.py)
 
-4)Solving Assignment problem (Hungarian algorithm) (Simplex/Assignment.py)
+4)Solving Assignment problem (Hungarian algorithm) (LinearProgramming/Assignment.py)
 
 5)Solving simple graph algorithm e.g.(min spanning tree,shortest path,max flow) (Network/Network.py)
 
@@ -21,11 +21,11 @@ Capable of:
 
 7)Solving 2 Dimension Convex,Concave Optimization (Gradient Search, 2dNewton's method) (NonLinear/Convex2D.py)
 
-99)Easy AI for breakthrough game (able to play with it as user/AI) (Simplex/BreakThru.py)
+99)Easy AI for breakthrough game (able to play with it as user/AI) (LinearProgramming/BreakThru.py)
 
 ---- In progress  ----
 
-3)Solving transortation problem (transportation simplex) (Simplex/Transportation.py)
+3)Solving transortation problem (transportation simplex) (LinearProgramming/Transportation.py)
 
 8)Solving Integer program (Branch and Bound Method) (NonLinear/Integer.py)
 
