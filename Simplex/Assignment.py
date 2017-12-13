@@ -167,6 +167,7 @@ def HungarianSolve(orimatrix,debug):
         if (debug):
             print("After #" + str(count) + " attempt :")
             print(matrix)
+            print("------------------------------------------- \n")
         assignment = Assign(matrix)[0]
         assignmentls = Assign(matrix)[1]
     for i in range(len(assignment)):

@@ -189,7 +189,9 @@ def transportationSolve(cost, debug ,method = None, matrix = None, printmatrix =
             a = vogel(cost,debug)
             matrix = a[0]
             printmatrix = a[1]
+    count = 0
     while(True):
+        count += 1
         ijmatrix = deepcopy(cost)
         subcost = cost[:len(cost)-1,:len(cost[0])-1]
         ##searching for Entering BV
@@ -223,13 +225,18 @@ def transportationSolve(cost, debug ,method = None, matrix = None, printmatrix =
         enterX = np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[0]
         enterY = np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[1]
         if(debug):
-            print("Entering var is :"+ str(subijmatrix[enterX][enterY]))
+            print("Entering var is : x"+ str(enterX + 1) + "," + str(enterY + 1))
+            print("Matrix for ui, vj is :")
             print(ijmatrix)
+        if(subijmatrix[enterX][enterY] >= 0):
+            break
         ##identifying loop
         matrix[np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[0]][np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[1]] = -1
         printmatrix[np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[0]][np.unravel_index(subijmatrix.argmin(), subijmatrix.shape)[1]] = '-1'
-        for i in printmatrix:
-            print(i)
+        if(debug):
+            print("Matrix for iteration #" + str(count) + ", Entering Var is marked as '-1' :")
+            for i in printmatrix:
+                print(i)
         edgelist = []
         for i in range(len(printmatrix)):
             for j in range(len(printmatrix[0])):
@@ -240,13 +247,82 @@ def transportationSolve(cost, debug ,method = None, matrix = None, printmatrix =
                     for row in range(len(printmatrix[0])):
                         if(printmatrix[i][row] != '-' and row != j and ((i,row),(i,j)) not in edgelist):
                             edgelist.append(((i,j),(i,row)))
-                    print(edgelist)
         G = nx.Graph(edgelist)
-        print(nx.find_cycle(G, orientation='original'))
-        break
-        try:
-            cycle = (nx.find_cycle(G, orientation='original'))
-        except:
+        cyclelist = (nx.cycle_basis(G, (enterX,enterY)))
+        templist = []
+        for i in cyclelist:
+            if (len(i) % 2 == 0 and (enterX,enterY) in i):
+                now = i.index((enterX, enterY))
+                next = (now + 1) % len(i)
+                dirlist = []
+                while(i.index((enterX,enterY)) != next):
+                    next = (now + 1) % len(i)
+                    if(i[next][0] != i[now][0] and i[next][1] == i[now][1]):
+                        dirlist.append(1)
+                    elif(i[next][0] == i[now][0] and i[next][1] != i[now][1]):
+                        dirlist.append(0)
+                    else:
+                        dirlist.append(-1)
+                    now = next
+                flag = True
+                for j in range(len(dirlist)-1):
+                    if(dirlist[j] == dirlist[j+1]):
+                        flag = False
+                if (-1 not in dirlist and flag):
+                    templist.append(i)
+        if(len(templist) == 0):
+            break
+        else:
+            cycle = templist[0]
+            if(debug):
+                print("Cycle identified :")
+                print(cycle)
+            numberlist = [matrix[i[0]][i[1]] if matrix[i[0]][i[1]] != -1 else 0 for i in cycle]
+            now = cycle.index((enterX, enterY))
+            next = (now + 1) % len(cycle)
+            flag = False
+            minlist = []
+            while (cycle.index((enterX, enterY)) != next):
+                next = (now + 1) % len(cycle)
+                if (flag):
+                    minlist.append(numberlist[now])
+                    flag = False
+                else:
+                    flag = True
+                now = next
+            now = cycle.index((enterX, enterY))
+            next = (now + 1) % len(cycle)
+            flag = False
+            matrix[enterX][enterY] = 0
+            while (cycle.index((enterX, enterY)) != next):
+                next = (now + 1) % len(cycle)
+                if (flag):
+                    matrix[cycle[now][0]][cycle[now][1]] -= min(minlist)
+                    flag = False
+                else:
+                    matrix[cycle[now][0]][cycle[now][1]] += min(minlist)
+                    flag = True
+                now = next
+            exitX,exitY = 0,0
+            for i in cycle:
+                if(matrix[i[0]][i[1]] == 0):
+                    exitX,exitY = i[0],i[1]
+            if(debug):
+                print("Leaving Var: x" + str(exitX+1) + "," +str(exitY + 1))
+            for i in range(len(matrix)):
+                for j in range(len(matrix[0])):
+                    if(i == exitX and j == exitY):
+                        printmatrix[i][j] = '-'
+                    elif(printmatrix[i][j] == '-'):
+                        printmatrix[i][j] = '-'
+                    else:
+                        printmatrix[i][j] = str(matrix[i][j])
+            if(debug):
+                print("Matrix after iteration #" + str(count))
+                for i in printmatrix:
+                    print(i)
+                print("------------------------------------------- \n")
+        if(count > 4):
             break
     if(debug):
         print("Final Allocation :")
