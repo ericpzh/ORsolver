@@ -11,7 +11,7 @@ Capable of:
 
 2)Solving payoff matrix LP (Simplex/PayoffMatrix.py)
 
-3)Solving transortation initialzation (NWcorner/Vogel approxi) (Simplex/Transportation.py)
+3)Solving transortation initialization (NWcorner/Vogel approxi) (Simplex/Transportation.py)
 
 4)Solving Assignment problem (Hungarian algorithm) (Simplex/Assignment.py)
 
